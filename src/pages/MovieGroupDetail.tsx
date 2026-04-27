@@ -97,8 +97,9 @@ export default function MovieGroupDetail() {
 
   useEffect(() => {
     if (!user) return;
-    setBuyerName(user.displayName || "");
-    setBuyerEmail(user.email || "");
+    const dn = user.displayName?.trim();
+    if (dn && dn.split(/\s+/).length >= 2) setBuyerName(dn);
+    if (user.email) setBuyerEmail(user.email);
   }, [user]);
 
   const finalMovies = useMemo(() => {
@@ -171,12 +172,16 @@ export default function MovieGroupDetail() {
                   
                   <div className="grid" style={{ gap: 12 }}>
                     <div className="field">
-                      <label>Full Name</label>
-                      <input className="input" value={buyerName} onChange={e => setBuyerName(e.target.value)} />
+                      <label>Full Name (two words minimum)</label>
+                      <input className="input" value={buyerName} onChange={e => setBuyerName(e.target.value)} placeholder="e.g. John Doe" />
                     </div>
                     <div className="field">
-                      <label>Phone (255...)</label>
-                      <input className="input" value={buyerPhone} onChange={e => setBuyerPhone(e.target.value)} placeholder="2557XXXXXXXX" />
+                      <label>Email</label>
+                      <input className="input" type="email" value={buyerEmail} onChange={e => setBuyerEmail(e.target.value)} placeholder="your@email.com" />
+                    </div>
+                    <div className="field">
+                      <label>Phone (e.g. 0712345678)</label>
+                      <input className="input" value={buyerPhone} onChange={e => setBuyerPhone(e.target.value)} placeholder="07XXXXXXXX" />
                     </div>
                     <button className="btn" disabled={payBusy} onClick={startPayment} style={{ background: "#0ea5e9", color: "#000", fontWeight: 800 }}>
                       {payBusy ? "Processing..." : `Unlock for ${group.amount} ${group.currency}`}
