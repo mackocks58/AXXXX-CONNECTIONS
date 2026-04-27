@@ -12,12 +12,12 @@ export async function createPalmpesaOrder({
 }) {
   const url = "https://palmpesa.drmlelwa.co.tz/api/palmpesa/initiate";
 
-  // Phone formatting: ensure it starts with 255 and has no leading 0
+  // Phone formatting: ensure it starts with 0 and has no leading 255 or +
   let phone = buyerPhone.replace(/\s+/g, "").replace(/^\+/, "");
-  if (phone.startsWith("0")) {
-    phone = "255" + phone.substring(1);
-  } else if (!phone.startsWith("255")) {
-    phone = "255" + phone;
+  if (phone.startsWith("255")) {
+    phone = "0" + phone.substring(3);
+  } else if (!phone.startsWith("0")) {
+    phone = "0" + phone;
   }
 
   const body = {
