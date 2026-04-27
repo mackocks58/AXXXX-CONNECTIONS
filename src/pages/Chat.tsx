@@ -261,7 +261,7 @@ export default function Chat() {
         {/* Chat Area */}
         <div className="card chat-main" style={{ display: "flex", flexDirection: "column", height: "70vh" }}>
           {/* Header */}
-          <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--stroke)", background: "rgba(5,8,22,0.4)" }}>
+          <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--stroke)", background: "rgba(248, 250, 252, 0.4)" }}>
             <h2 style={{ margin: 0, fontSize: 18 }}># {channels.find(c => c.id === activeChannelId)?.name || "Chat"}</h2>
           </div>
 
@@ -295,14 +295,14 @@ export default function Chat() {
                   
                   <div 
                     style={{ 
-                      background: isMine ? "rgba(56, 189, 248, 0.2)" : "rgba(17, 27, 51, 0.8)", 
+                      background: isMine ? "rgba(56, 189, 248, 0.2)" : "rgba(15, 23, 42, 0.8)", 
                       border: isMine ? "1px solid rgba(56, 189, 248, 0.4)" : "1px solid var(--stroke)",
                       padding: "10px 14px", 
                       borderRadius: isMine ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
                     }}
                   >
                     {m.replyTo && (
-                      <div style={{ background: "rgba(0,0,0,0.2)", padding: "6px 10px", borderRadius: 8, marginBottom: 8, fontSize: 13, borderLeft: "3px solid var(--accent)" }}>
+                      <div style={{ background: "rgba(15, 23, 42, 0.2)", padding: "6px 10px", borderRadius: 8, marginBottom: 8, fontSize: 13, borderLeft: "3px solid var(--accent)" }}>
                         <strong style={{ color: "var(--accent)", display: "block" }}>{m.replyTo.userName}</strong>
                         <span className="muted" style={{ display: "block", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{m.replyTo.text || "Image"}</span>
                       </div>
@@ -327,7 +327,7 @@ export default function Chat() {
           </div>
 
           {/* Input Area */}
-          <div style={{ borderTop: "1px solid var(--stroke)", padding: "12px", background: "rgba(5, 8, 22, 0.8)" }}>
+          <div style={{ borderTop: "1px solid var(--stroke)", padding: "12px", background: "rgba(248, 250, 252, 0.8)" }}>
             {replyTo && (
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(56, 189, 248, 0.1)", padding: "6px 12px", borderRadius: 8, marginBottom: 8 }}>
                 <div style={{ fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -337,7 +337,7 @@ export default function Chat() {
               </div>
             )}
             <form onSubmit={sendMessage} style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-              <label style={{ cursor: "pointer", color: file ? "var(--accent)" : "var(--muted)", padding: "8px", background: "rgba(17, 27, 51, 0.5)", borderRadius: "8px", border: "1px solid var(--stroke)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <label style={{ cursor: "pointer", color: file ? "var(--accent)" : "var(--muted)", padding: "8px", background: "rgba(15, 23, 42, 0.5)", borderRadius: "8px", border: "1px solid var(--stroke)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <input type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
               </label>

@@ -126,7 +126,7 @@ export function GlobalFeatures() {
           position: "fixed",
           top: 0, left: 0, right: 0, bottom: 0,
           zIndex: 9999,
-          background: "rgba(5, 8, 22, 0.8)",
+          background: "rgba(248, 250, 252, 0.8)",
           backdropFilter: "blur(4px)",
           display: "flex",
           alignItems: "center",
@@ -138,7 +138,7 @@ export function GlobalFeatures() {
                 onClick={() => setShowAd(false)}
                 style={{
                   position: "absolute", top: 10, right: 10,
-                  background: "rgba(0,0,0,0.5)", borderRadius: "50%", border: "none", color: "#fff", cursor: "pointer", fontSize: 20, width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10
+                  background: "rgba(15, 23, 42, 0.5)", borderRadius: "50%", border: "none", color: "#0f172a", cursor: "pointer", fontSize: 20, width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10
                 }}
               >
                 &times;
@@ -148,12 +148,12 @@ export function GlobalFeatures() {
                 
                 {/* Overlay logos if they exist */}
                 {(currentAd as any).homeLogo && (currentAd as any).awayLogo && (
-                  <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", alignItems: "center", gap: 16, background: "rgba(5, 8, 22, 0.7)", padding: "12px 24px", borderRadius: 999, backdropFilter: "blur(8px)", boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}>
-                    <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", padding: 4 }}>
+                  <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", alignItems: "center", gap: 16, background: "rgba(248, 250, 252, 0.7)", padding: "12px 24px", borderRadius: 999, backdropFilter: "blur(8px)", boxShadow: "0 8px 32px rgba(15, 23, 42, 0.5)" }}>
+                    <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#0f172a", display: "flex", alignItems: "center", justifyContent: "center", padding: 4 }}>
                       <img src={(currentAd as any).homeLogo} alt="Home" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                     </div>
-                    <span style={{ fontWeight: 800, fontSize: 16, color: "#fff" }}>VS</span>
-                    <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", padding: 4 }}>
+                    <span style={{ fontWeight: 800, fontSize: 16, color: "#0f172a" }}>VS</span>
+                    <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#0f172a", display: "flex", alignItems: "center", justifyContent: "center", padding: 4 }}>
                       <img src={(currentAd as any).awayLogo} alt="Away" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                     </div>
                   </div>

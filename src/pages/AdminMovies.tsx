@@ -185,7 +185,7 @@ export function AdminMovies() {
                </thead>
                <tbody>
                  {groupList.map(g => (
-                   <tr key={g.id} style={{ background: "rgba(255,255,255,0.03)" }}>
+                   <tr key={g.id} style={{ background: "rgba(15, 23, 42, 0.03)" }}>
                      <td>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                            <img src={g.thumbnail} style={{ width: 40, height: 40, borderRadius: 4, objectFit: "cover" }} />

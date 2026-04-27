@@ -11,9 +11,9 @@ function CountdownBadge({ expiresAt }: { expiresAt: number }) {
   const cd = useCountdown(expiresAt);
   if (cd.expired) return <span className="pill">Expired</span>;
   let color = "#fde047";
-  let bg = "linear-gradient(135deg, rgba(250, 204, 21, 0.2), rgba(234, 179, 8, 0.05))";
-  let border = "rgba(250, 204, 21, 0.5)";
-  let shadow = "0 0 12px rgba(250, 204, 21, 0.4)";
+  let bg = "linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(234, 179, 8, 0.05))";
+  let border = "rgba(14, 165, 233, 0.5)";
+  let shadow = "0 0 12px rgba(14, 165, 233, 0.4)";
 
   if (cd.days === 0) {
     if (cd.hours === 0 && cd.minutes < 15) {
@@ -30,7 +30,7 @@ function CountdownBadge({ expiresAt }: { expiresAt: number }) {
   }
 
   return (
-    <span className="pill breathe" style={{ color, background: bg, borderColor: border, boxShadow: shadow, fontWeight: 800, transition: "all 1s ease", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}>
+    <span className="pill breathe" style={{ color, background: bg, borderColor: border, boxShadow: shadow, fontWeight: 800, transition: "all 1s ease", textShadow: "0 1px 4px rgba(15, 23, 42, 0.8)" }}>
       {cd.days}d {String(cd.hours).padStart(2, "0")}:{String(cd.minutes).padStart(2, "0")}:
       {String(cd.seconds).padStart(2, "0")}
     </span>
@@ -73,7 +73,7 @@ export default function Betslips() {
     return (
       <Shell>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh" }}>
-          <div style={{ width: 40, height: 40, border: "3px solid rgba(255,255,255,0.1)", borderTopColor: "#3b82f6", borderRadius: "50%", animation: "spin 1s linear infinite" }}></div>
+          <div style={{ width: 40, height: 40, border: "3px solid rgba(15, 23, 42, 0.1)", borderTopColor: "#3b82f6", borderRadius: "50%", animation: "spin 1s linear infinite" }}></div>
         </div>
       </Shell>
     );
@@ -117,9 +117,9 @@ export default function Betslips() {
           <article key={b.id} className="card">
             <div style={{ position: "relative", overflow: "hidden" }}>
               <img className="thumb" src={b.imageUrl} alt="" loading="lazy" style={{ filter: "blur(14px) brightness(0.6)", transform: "scale(1.1)", transition: "all 0.3s ease" }} />
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", background: "rgba(5, 8, 22, 0.3)" }}>
-                <span className="breathe" style={{ fontSize: 36, filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.8))", display: "inline-block" }}>🔒</span>
-                <span className="breathe" style={{ fontWeight: 700, marginTop: 8, color: "#fff", textShadow: "0 2px 8px rgba(0,0,0,0.8)", letterSpacing: "0.05em", display: "inline-block" }}>PREMIUM BETSLIP</span>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", background: "rgba(248, 250, 252, 0.3)" }}>
+                <span className="breathe" style={{ fontSize: 36, filter: "drop-shadow(0 2px 8px rgba(15, 23, 42, 0.8))", display: "inline-block" }}>🔒</span>
+                <span className="breathe" style={{ fontWeight: 700, marginTop: 8, color: "#0f172a", textShadow: "0 2px 8px rgba(15, 23, 42, 0.8)", letterSpacing: "0.05em", display: "inline-block" }}>PREMIUM BETSLIP</span>
               </div>
             </div>
             <div className="card-body">

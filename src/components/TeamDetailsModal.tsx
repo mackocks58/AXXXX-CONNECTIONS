@@ -122,18 +122,18 @@ export function TeamDetailsModal({ teamId, fixtureId, leagueId, season, teamName
           maxWidth: 400, 
           margin: "0 auto", 
           aspectRatio: "2/3",
-          background: "repeating-linear-gradient(0deg, transparent, transparent 10%, rgba(0,0,0,0.06) 10%, rgba(0,0,0,0.06) 20%), linear-gradient(180deg, #10b981 0%, #059669 100%)",
-          border: "4px solid #fff",
+          background: "repeating-linear-gradient(0deg, transparent, transparent 10%, rgba(15, 23, 42, 0.06) 10%, rgba(15, 23, 42, 0.06) 20%), linear-gradient(180deg, #10b981 0%, #059669 100%)",
+          border: "4px solid #0f172a",
           borderRadius: 8,
           overflow: "hidden",
           display: "flex",
           flexDirection: "column-reverse", 
           justifyContent: "space-around"
         }}>
-          <div style={{ position: "absolute", top: "50%", left: 0, right: 0, height: 2, background: "rgba(255,255,255,0.4)" }} />
-          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 60, height: 60, borderRadius: "50%", border: "2px solid rgba(255,255,255,0.4)" }} />
-          <div style={{ position: "absolute", bottom: -10, left: "50%", transform: "translateX(-50%)", width: "40%", height: "15%", border: "2px solid rgba(255,255,255,0.4)" }} />
-          <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", width: "40%", height: "15%", border: "2px solid rgba(255,255,255,0.4)" }} />
+          <div style={{ position: "absolute", top: "50%", left: 0, right: 0, height: 2, background: "rgba(15, 23, 42, 0.4)" }} />
+          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 60, height: 60, borderRadius: "50%", border: "2px solid rgba(15, 23, 42, 0.4)" }} />
+          <div style={{ position: "absolute", bottom: -10, left: "50%", transform: "translateX(-50%)", width: "40%", height: "15%", border: "2px solid rgba(15, 23, 42, 0.4)" }} />
+          <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", width: "40%", height: "15%", border: "2px solid rgba(15, 23, 42, 0.4)" }} />
           
           {sortedRows.map((x) => {
             const playersInRow = rows[x].sort((a: any, b: any) => {
@@ -154,19 +154,19 @@ export function TeamDetailsModal({ teamId, fixtureId, leagueId, season, teamName
                   >
                     <div style={{ position: "relative", width: 44, height: 44, marginBottom: 2 }}>
                       {player.photo ? (
-                        <img src={player.photo} alt={player.name} style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover", border: "2px solid #fff", backgroundColor: "#fff", boxShadow: "0 4px 10px rgba(0,0,0,0.5)" }} />
+                        <img src={player.photo} alt={player.name} style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover", border: "2px solid #0f172a", backgroundColor: "#0f172a", boxShadow: "0 4px 10px rgba(15, 23, 42, 0.5)" }} />
                       ) : (
-                        <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", border: "2px solid #ddd", boxShadow: "0 4px 10px rgba(0,0,0,0.5)" }}>
+                        <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#0f172a", display: "flex", alignItems: "center", justifyContent: "center", border: "2px solid #ddd", boxShadow: "0 4px 10px rgba(15, 23, 42, 0.5)" }}>
                            <span style={{color:"#059669", fontSize:14, fontWeight:800}}>{player.number}</span>
                         </div>
                       )}
-                      {!player.photo && <div style={{ position: "absolute", bottom: -4, right: -4, width: 20, height: 20, borderRadius: "50%", background: "var(--accent)", color: "#fff", fontSize: 10, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", border: "1px solid #fff" }}>{player.number}</div>}
+                      {!player.photo && <div style={{ position: "absolute", bottom: -4, right: -4, width: 20, height: 20, borderRadius: "50%", background: "var(--accent)", color: "#0f172a", fontSize: 10, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", border: "1px solid #0f172a" }}>{player.number}</div>}
                     </div>
                     <div style={{ 
-                      fontSize: 11, color: "#fff", textShadow: "0 1px 3px rgba(0,0,0,0.8), 0 1px 1px rgba(0,0,0,1)",
+                      fontSize: 11, color: "#0f172a", textShadow: "0 1px 3px rgba(15, 23, 42, 0.8), 0 1px 1px rgba(15, 23, 42, 1)",
                       textAlign: "center", marginTop: 2, fontWeight: 800,
                       whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "100%",
-                      background: "rgba(0,0,0,0.4)", padding: "2px 6px", borderRadius: 4
+                      background: "rgba(15, 23, 42, 0.4)", padding: "2px 6px", borderRadius: 4
                     }}>
                       {player.name}
                     </div>
@@ -230,7 +230,7 @@ export function TeamDetailsModal({ teamId, fixtureId, leagueId, season, teamName
               <td>
                 <div style={{ display: "flex", gap: 2 }}>
                   {s.form?.split('').map((f: string, i: number) => (
-                    <span key={i} style={{ width: 14, height: 14, borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: "bold", background: f === 'W' ? "var(--accent)" : f === 'D' ? "#94a3b8" : "var(--danger)", color: "#fff" }}>{f}</span>
+                    <span key={i} style={{ width: 14, height: 14, borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: "bold", background: f === 'W' ? "var(--accent)" : f === 'D' ? "#94a3b8" : "var(--danger)", color: "#0f172a" }}>{f}</span>
                   ))}
                 </div>
               </td>
@@ -284,9 +284,9 @@ export function TeamDetailsModal({ teamId, fixtureId, leagueId, season, teamName
                 <div 
                   key={p.id} 
                   onClick={() => setActivePlayerId(p.id)}
-                  style={{ display: "flex", alignItems: "center", gap: 12, padding: 8, background: "rgba(255,255,255,0.03)", borderRadius: 8, cursor: "pointer" }}
+                  style={{ display: "flex", alignItems: "center", gap: 12, padding: 8, background: "rgba(15, 23, 42, 0.03)", borderRadius: 8, cursor: "pointer" }}
                 >
-                  <img src={p.photo} alt={p.name} width={40} height={40} style={{ borderRadius: "50%", objectFit: "cover", background: "#fff" }} />
+                  <img src={p.photo} alt={p.name} width={40} height={40} style={{ borderRadius: "50%", objectFit: "cover", background: "#0f172a" }} />
                   <div>
                     <div style={{ fontSize: 14, fontWeight: 600 }}>{p.name}</div>
                     <div style={{ fontSize: 12, color: "var(--muted)" }}>No. {p.number || "-"} • Age: {p.age || "-"}</div>
@@ -305,18 +305,18 @@ export function TeamDetailsModal({ teamId, fixtureId, leagueId, season, teamName
   return (
     <div style={{
       position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-      background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)",
+      background: "rgba(15, 23, 42, 0.85)", backdropFilter: "blur(8px)",
       zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 16
     }} onClick={onClose}>
       <div style={{
         width: "100%", maxWidth: 650, maxHeight: "90vh",
         background: "var(--bg1)", borderRadius: 24, border: "1px solid var(--stroke)",
-        boxShadow: "0 24px 60px rgba(0,0,0,0.5)", display: "flex", flexDirection: "column", overflow: "hidden"
+        boxShadow: "0 24px 60px rgba(15, 23, 42, 0.5)", display: "flex", flexDirection: "column", overflow: "hidden"
       }} onClick={e => e.stopPropagation()}>
         
         {/* Header */}
         <div style={{ padding: 24, borderBottom: "1px solid var(--stroke)", display: "flex", alignItems: "center", gap: 16, position: "relative" }}>
-          <div style={{ width: 72, height: 72, borderRadius: 16, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", padding: 8 }}>
+          <div style={{ width: 72, height: 72, borderRadius: 16, background: "#0f172a", display: "flex", alignItems: "center", justifyContent: "center", padding: 8 }}>
             <img src={teamLogo} alt={teamName} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
           </div>
           <div>
@@ -330,7 +330,7 @@ export function TeamDetailsModal({ teamId, fixtureId, leagueId, season, teamName
           <button 
             onClick={onClose}
             style={{
-              position: "absolute", top: 16, right: 16, background: "rgba(255,255,255,0.05)", border: "none", color: "var(--muted)",
+              position: "absolute", top: 16, right: 16, background: "rgba(15, 23, 42, 0.05)", border: "none", color: "var(--muted)",
               width: 32, height: 32, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer"
             }}
           >✕</button>
@@ -357,19 +357,19 @@ export function TeamDetailsModal({ teamId, fixtureId, leagueId, season, teamName
                 <>
                   {teamStanding && (
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 24 }}>
-                      <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(5, 8, 22, 0.5)" }}>
+                      <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(248, 250, 252, 0.5)" }}>
                         <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase" }}>Played</div>
                         <div style={{ fontSize: 20, fontWeight: 800 }}>{teamStanding.all?.played}</div>
                       </div>
-                      <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(5, 8, 22, 0.5)" }}>
+                      <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(248, 250, 252, 0.5)" }}>
                         <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase" }}>Won</div>
                         <div style={{ fontSize: 20, fontWeight: 800, color: "var(--accent)" }}>{teamStanding.all?.win}</div>
                       </div>
-                      <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(5, 8, 22, 0.5)" }}>
+                      <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(248, 250, 252, 0.5)" }}>
                         <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase" }}>Drawn</div>
                         <div style={{ fontSize: 20, fontWeight: 800, color: "var(--text)" }}>{teamStanding.all?.draw}</div>
                       </div>
-                      <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(5, 8, 22, 0.5)" }}>
+                      <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(248, 250, 252, 0.5)" }}>
                         <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase" }}>Lost</div>
                         <div style={{ fontSize: 20, fontWeight: 800, color: "var(--danger)" }}>{teamStanding.all?.lose}</div>
                       </div>
@@ -424,13 +424,13 @@ function PlayerDetailsModal({ playerId, season, onClose }: { playerId: number, s
   return (
     <div style={{
       position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-      background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)",
+      background: "rgba(15, 23, 42, 0.6)", backdropFilter: "blur(4px)",
       zIndex: 10000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16
     }} onClick={onClose}>
       <div style={{
         width: "100%", maxWidth: 450,
         background: "var(--bg2)", borderRadius: 20, border: "1px solid var(--stroke)",
-        boxShadow: "0 20px 50px rgba(0,0,0,0.6)", overflow: "hidden"
+        boxShadow: "0 20px 50px rgba(15, 23, 42, 0.6)", overflow: "hidden"
       }} onClick={e => e.stopPropagation()}>
         {loading ? (
           <div style={{ padding: 40, textAlign: "center", color: "var(--accent)" }}>Loading player stats...</div>
@@ -449,21 +449,21 @@ function PlayerDetailsModal({ playerId, season, onClose }: { playerId: number, s
             </div>
             
             <div className="grid cols-2" style={{ gap: 12 }}>
-              <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(255,255,255,0.03)" }}>
+              <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(15, 23, 42, 0.03)" }}>
                 <div style={{ fontSize: 10, color: "var(--muted)", textTransform: "uppercase" }}>Appearances</div>
                 <div style={{ fontSize: 20, fontWeight: 800 }}>{playerInfo.statistics[0].games.appearences || 0}</div>
               </div>
-              <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(255,255,255,0.03)" }}>
+              <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(15, 23, 42, 0.03)" }}>
                 <div style={{ fontSize: 10, color: "var(--muted)", textTransform: "uppercase" }}>Goals</div>
                 <div style={{ fontSize: 20, fontWeight: 800, color: "var(--accent)" }}>{playerInfo.statistics[0].goals.total || 0}</div>
               </div>
-              <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(255,255,255,0.03)" }}>
+              <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(15, 23, 42, 0.03)" }}>
                 <div style={{ fontSize: 10, color: "var(--muted)", textTransform: "uppercase" }}>Assists</div>
                 <div style={{ fontSize: 20, fontWeight: 800, color: "var(--accent2)" }}>{playerInfo.statistics[0].goals.assists || 0}</div>
               </div>
-              <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(255,255,255,0.03)" }}>
+              <div className="card" style={{ padding: 12, textAlign: "center", background: "rgba(15, 23, 42, 0.03)" }}>
                 <div style={{ fontSize: 10, color: "var(--muted)", textTransform: "uppercase" }}>Rating</div>
-                <div style={{ fontSize: 20, fontWeight: 800, color: "#facc15" }}>{parseFloat(playerInfo.statistics[0].games.rating || "0").toFixed(1)}</div>
+                <div style={{ fontSize: 20, fontWeight: 800, color: "#0ea5e9" }}>{parseFloat(playerInfo.statistics[0].games.rating || "0").toFixed(1)}</div>
               </div>
             </div>
 

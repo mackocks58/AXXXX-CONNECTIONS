@@ -88,7 +88,7 @@ export function Navbar() {
                   top: -6,
                   right: -6,
                   background: "var(--danger)",
-                  color: "#fff",
+                  color: "#0f172a",
                   fontSize: 10,
                   fontWeight: "bold",
                   borderRadius: "10px",

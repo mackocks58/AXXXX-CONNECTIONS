@@ -15,9 +15,9 @@ function BigCountdown({ expiresAt }: { expiresAt: number }) {
     return <div className="alert">This betslip has expired.</div>;
   }
   let color = "#fde047";
-  let bg = "linear-gradient(135deg, rgba(250, 204, 21, 0.2), rgba(234, 179, 8, 0.05))";
-  let border = "rgba(250, 204, 21, 0.5)";
-  let shadow = "0 0 12px rgba(250, 204, 21, 0.4)";
+  let bg = "linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(234, 179, 8, 0.05))";
+  let border = "rgba(14, 165, 233, 0.5)";
+  let shadow = "0 0 12px rgba(14, 165, 233, 0.4)";
   
   if (cd.days === 0) {
     if (cd.hours === 0 && cd.minutes < 15) {
@@ -33,7 +33,7 @@ function BigCountdown({ expiresAt }: { expiresAt: number }) {
     }
   }
 
-  const boxStyle = { color, background: bg, borderColor: border, boxShadow: shadow, fontWeight: 800, transition: "all 1s ease", textShadow: "0 1px 4px rgba(0,0,0,0.8)" };
+  const boxStyle = { color, background: bg, borderColor: border, boxShadow: shadow, fontWeight: 800, transition: "all 1s ease", textShadow: "0 1px 4px rgba(15, 23, 42, 0.8)" };
 
   return (
     <div className="countdown" aria-live="polite">
@@ -173,7 +173,7 @@ export default function BetslipDetail() {
     return (
       <Shell>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh" }}>
-          <div style={{ width: 40, height: 40, border: "3px solid rgba(255,255,255,0.1)", borderTopColor: "#3b82f6", borderRadius: "50%", animation: "spin 1s linear infinite" }}></div>
+          <div style={{ width: 40, height: 40, border: "3px solid rgba(15, 23, 42, 0.1)", borderTopColor: "#3b82f6", borderRadius: "50%", animation: "spin 1s linear infinite" }}></div>
         </div>
       </Shell>
     );
@@ -235,9 +235,9 @@ export default function BetslipDetail() {
           <div style={{ position: "relative", overflow: "hidden" }}>
             <img className={`thumb ${unlocked ? "breathe" : ""}`} src={slip.imageUrl} alt="" style={{ filter: unlocked ? "none" : "blur(14px) brightness(0.6)", transform: unlocked ? "none" : "scale(1.1)", transition: "all 0.5s ease" }} />
             {!unlocked && (
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", background: "rgba(5, 8, 22, 0.3)" }}>
-                <span className="breathe" style={{ fontSize: 42, filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.8))", display: "inline-block" }}>🔒</span>
-                <span className="breathe" style={{ fontWeight: 700, marginTop: 12, color: "#fff", textShadow: "0 2px 8px rgba(0,0,0,0.8)", letterSpacing: "0.05em", fontSize: 18, display: "inline-block" }}>LOCKED</span>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", background: "rgba(248, 250, 252, 0.3)" }}>
+                <span className="breathe" style={{ fontSize: 42, filter: "drop-shadow(0 2px 8px rgba(15, 23, 42, 0.8))", display: "inline-block" }}>🔒</span>
+                <span className="breathe" style={{ fontWeight: 700, marginTop: 12, color: "#0f172a", textShadow: "0 2px 8px rgba(15, 23, 42, 0.8)", letterSpacing: "0.05em", fontSize: 18, display: "inline-block" }}>LOCKED</span>
               </div>
             )}
           </div>
@@ -330,7 +330,7 @@ export default function BetslipDetail() {
                     padding: 12,
                     borderRadius: 12,
                     border: "1px solid rgba(148,163,184,0.18)",
-                    background: "rgba(5,8,22,0.55)",
+                    background: "rgba(248, 250, 252, 0.55)",
                     wordBreak: "break-word",
                   }}
                 >

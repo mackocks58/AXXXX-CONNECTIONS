@@ -58,7 +58,7 @@ export default function Movies() {
     return (
       <Shell>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh" }}>
-          <div style={{ width: 40, height: 40, border: "3px solid rgba(255,255,255,0.1)", borderTopColor: "#3b82f6", borderRadius: "50%", animation: "spin 1s linear infinite" }}></div>
+          <div style={{ width: 40, height: 40, border: "3px solid rgba(15, 23, 42, 0.1)", borderTopColor: "#3b82f6", borderRadius: "50%", animation: "spin 1s linear infinite" }}></div>
         </div>
       </Shell>
     );
@@ -82,7 +82,7 @@ export default function Movies() {
               to={`/movies/${group.id}`}
               className="card movie-group-card" 
               style={{ 
-                background: "linear-gradient(135deg, rgba(11, 18, 36, 0.9), rgba(5, 8, 22, 0.95))", 
+                background: "linear-gradient(135deg, rgba(11, 18, 36, 0.9), rgba(248, 250, 252, 0.95))", 
                 border: "1px solid var(--stroke)", 
                 transition: "transform 0.3s ease, box-shadow 0.3s ease", 
                 cursor: "pointer",
@@ -92,8 +92,8 @@ export default function Movies() {
               }}
               onMouseEnter={(e) => { 
                 e.currentTarget.style.transform = "translateY(-6px)"; 
-                e.currentTarget.style.boxShadow = unlocked ? "0 12px 30px rgba(16, 185, 129, 0.2)" : "0 12px 30px rgba(250, 204, 21, 0.15)"; 
-                e.currentTarget.style.borderColor = unlocked ? "var(--accent)" : "#facc15"; 
+                e.currentTarget.style.boxShadow = unlocked ? "0 12px 30px rgba(16, 185, 129, 0.2)" : "0 12px 30px rgba(14, 165, 233, 0.15)"; 
+                e.currentTarget.style.borderColor = unlocked ? "var(--accent)" : "#0ea5e9"; 
               }}
               onMouseLeave={(e) => { 
                 e.currentTarget.style.transform = "none"; 
@@ -126,17 +126,17 @@ export default function Movies() {
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
-                    background: "rgba(0,0,0,0.4)"
+                    background: "rgba(15, 23, 42, 0.4)"
                   }}>
                     <span className="breathe" style={{ fontSize: 40, marginBottom: 12 }}>🔒</span>
                     <span style={{ 
-                      background: "rgba(250, 204, 21, 0.9)", 
+                      background: "rgba(14, 165, 233, 0.9)", 
                       color: "#000", 
                       padding: "6px 12px", 
                       borderRadius: 20, 
                       fontSize: 14, 
                       fontWeight: 800,
-                      boxShadow: "0 0 20px rgba(250, 204, 21, 0.5)"
+                      boxShadow: "0 0 20px rgba(14, 165, 233, 0.5)"
                     }}>
                       {group.amount} {group.currency}
                     </span>
@@ -148,7 +148,7 @@ export default function Movies() {
                     top: 12,
                     right: 12,
                     background: "rgba(16, 185, 129, 0.9)",
-                    color: "#fff",
+                    color: "#0f172a",
                     padding: "4px 8px",
                     borderRadius: 8,
                     fontSize: 11,
@@ -160,7 +160,7 @@ export default function Movies() {
                 )}
               </div>
               <div className="card-body" style={{ padding: 16 }}>
-                <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: unlocked ? "var(--accent)" : "#fef08a" }}>
+                <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: unlocked ? "var(--accent)" : "#bae6fd" }}>
                   {group.name}
                 </h3>
                 <p style={{ margin: "6px 0 0 0", fontSize: 13, color: "var(--muted)", lineHeight: 1.4 }}>

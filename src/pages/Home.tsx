@@ -138,7 +138,7 @@ export default function Home() {
       ) : (
         <div className="grid cols-2" style={{ gap: 20 }}>
           {matches.map((m) => (
-            <div key={m.id} className="card" style={{ background: "linear-gradient(135deg, rgba(11, 18, 36, 0.9), rgba(5, 8, 22, 0.95))", border: "1px solid var(--stroke)", transition: "transform 0.3s ease, box-shadow 0.3s ease", cursor: "pointer" }}
+            <div key={m.id} className="card" style={{ background: "linear-gradient(135deg, #ffffff, #f0fdf4)", border: "1px solid var(--stroke)", transition: "transform 0.3s ease, box-shadow 0.3s ease", cursor: "pointer" }}
                  onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 30px rgba(16, 185, 129, 0.2)"; e.currentTarget.style.borderColor = "var(--accent)"; }}
                  onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "var(--shadow)"; e.currentTarget.style.borderColor = "var(--stroke)"; }}>
               <div className="card-body" style={{ display: "flex", flexDirection: "column", alignItems: "center", position: "relative" }}>
@@ -166,7 +166,7 @@ export default function Home() {
                     onMouseEnter={(e) => { if (m.homeTeamId) e.currentTarget.style.transform = "scale(1.1)"; }}
                     onMouseLeave={(e) => { if (m.homeTeamId) e.currentTarget.style.transform = "none"; }}
                   >
-                    <div style={{ width: 64, height: 64, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", padding: 8, boxShadow: "0 8px 24px rgba(0,0,0,0.5)", marginBottom: 12 }}>
+                    <div style={{ width: 64, height: 64, borderRadius: "50%", background: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", padding: 8, boxShadow: "0 8px 24px rgba(14, 165, 233, 0.15)", marginBottom: 12 }}>
                       <img src={m.homeLogo} alt={m.homeTeam} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                     </div>
                     <span style={{ fontWeight: 700, textAlign: "center", fontSize: 14 }}>{m.homeTeam}</span>
@@ -179,7 +179,7 @@ export default function Home() {
                         {m.homeScore} - {m.awayScore}
                       </span>
                     ) : (
-                      <span style={{ fontWeight: 800, fontSize: 20, color: "var(--muted)", background: "rgba(255,255,255,0.05)", padding: "8px 12px", borderRadius: 12 }}>
+                      <span style={{ fontWeight: 800, fontSize: 20, color: "var(--muted)", background: "rgba(15, 23, 42, 0.05)", padding: "8px 12px", borderRadius: 12 }}>
                         VS
                       </span>
                     )}
@@ -196,7 +196,7 @@ export default function Home() {
                     onMouseEnter={(e) => { if (m.awayTeamId) e.currentTarget.style.transform = "scale(1.1)"; }}
                     onMouseLeave={(e) => { if (m.awayTeamId) e.currentTarget.style.transform = "none"; }}
                   >
-                    <div style={{ width: 64, height: 64, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", padding: 8, boxShadow: "0 8px 24px rgba(0,0,0,0.5)", marginBottom: 12 }}>
+                    <div style={{ width: 64, height: 64, borderRadius: "50%", background: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", padding: 8, boxShadow: "0 8px 24px rgba(14, 165, 233, 0.15)", marginBottom: 12 }}>
                       <img src={m.awayLogo} alt={m.awayTeam} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                     </div>
                     <span style={{ fontWeight: 700, textAlign: "center", fontSize: 14 }}>{m.awayTeam}</span>

@@ -111,14 +111,14 @@ export default function PaymentReturn() {
             </div>
             
             <div style={{ 
-              background: "rgba(5, 8, 22, 0.4)", 
+              background: "rgba(248, 250, 252, 0.4)", 
               padding: "15px 30px", 
               borderRadius: 12, 
-              border: "1px solid rgba(255,255,255,0.05)",
+              border: "1px solid rgba(15, 23, 42, 0.05)",
               marginBottom: 20
             }}>
               <div className="muted" style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: 1, marginBottom: 5 }}>Time Remaining</div>
-              <div style={{ fontSize: 36, fontWeight: 800, fontFamily: "monospace", color: timeLeft < 60 ? "#ef4444" : "#e2e8f0" }}>
+              <div style={{ fontSize: 36, fontWeight: 800, fontFamily: "monospace", color: timeLeft < 60 ? "#ef4444" : "#334155" }}>
                 {formatTime(timeLeft)}
               </div>
             </div>

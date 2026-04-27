@@ -62,7 +62,7 @@ export default function Account() {
   return (
     <Shell>
       <div style={{ padding: "16px 0 24px", textAlign: "center", marginBottom: 24, background: "linear-gradient(180deg, rgba(56, 189, 248, 0.08), transparent)", borderRadius: "var(--radius)" }}>
-        <div className="breathe" style={{ width: 80, height: 80, borderRadius: "50%", background: "linear-gradient(135deg, var(--accent), var(--accent2))", margin: "0 auto 16px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, fontWeight: 800, color: "#fff", boxShadow: "0 8px 24px rgba(56, 189, 248, 0.3)" }}>
+        <div className="breathe" style={{ width: 80, height: 80, borderRadius: "50%", background: "linear-gradient(135deg, var(--accent), var(--accent2))", margin: "0 auto 16px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, fontWeight: 800, color: "#0f172a", boxShadow: "0 8px 24px rgba(56, 189, 248, 0.3)" }}>
           {firstName.charAt(0).toUpperCase()}
         </div>
         <h1 className="page-title" style={{ margin: "0 0 8px" }}>
@@ -80,21 +80,21 @@ export default function Account() {
             
             <div className="field" style={{ marginBottom: 16 }}>
               <label>Full Name</label>
-              <div className="input" style={{ background: "rgba(5, 8, 22, 0.3)", padding: "12px 16px", fontSize: 15 }}>
+              <div className="input" style={{ background: "rgba(248, 250, 252, 0.3)", padding: "12px 16px", fontSize: 15 }}>
                 {user.displayName || "Not set"}
               </div>
             </div>
 
             <div className="field" style={{ marginBottom: 16 }}>
               <label>Email Address</label>
-              <div className="input" style={{ background: "rgba(5, 8, 22, 0.3)", padding: "12px 16px", fontSize: 15 }}>
+              <div className="input" style={{ background: "rgba(248, 250, 252, 0.3)", padding: "12px 16px", fontSize: 15 }}>
                 {user.email}
               </div>
             </div>
 
             <div className="field" style={{ marginBottom: 20 }}>
               <label>User ID</label>
-              <div className="input mono" style={{ background: "rgba(5, 8, 22, 0.3)", padding: "12px 16px", fontSize: 13, color: "var(--muted)" }}>
+              <div className="input mono" style={{ background: "rgba(248, 250, 252, 0.3)", padding: "12px 16px", fontSize: 13, color: "var(--muted)" }}>
                 {user.uid}
               </div>
             </div>
@@ -115,17 +115,17 @@ export default function Account() {
         </div>
 
         <div className="grid" style={{ gap: 16, alignContent: "start" }}>
-          <div className="card" style={{ background: "linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(17, 27, 51, 0.8))", borderColor: "rgba(56, 189, 248, 0.2)" }}>
+          <div className="card" style={{ background: "linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(15, 23, 42, 0.8))", borderColor: "rgba(56, 189, 248, 0.2)" }}>
             <div className="card-body">
               <h2 style={{ margin: "0 0 16px", fontSize: 18, display: "flex", alignItems: "center", gap: 8 }}>
                 <span>🌟</span> Social Activity
               </h2>
               <div className="row" style={{ gap: 24 }}>
-                <div style={{ flex: 1, background: "rgba(5, 8, 22, 0.5)", padding: 16, borderRadius: 12, border: "1px solid var(--stroke)", textAlign: "center" }}>
+                <div style={{ flex: 1, background: "rgba(248, 250, 252, 0.5)", padding: 16, borderRadius: 12, border: "1px solid var(--stroke)", textAlign: "center" }}>
                   <div className="muted" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>Following</div>
                   <div style={{ fontSize: 32, fontWeight: 800, color: "var(--accent)" }}>{following.length}</div>
                 </div>
-                <div style={{ flex: 1, background: "rgba(5, 8, 22, 0.5)", padding: 16, borderRadius: 12, border: "1px solid var(--stroke)", textAlign: "center" }}>
+                <div style={{ flex: 1, background: "rgba(248, 250, 252, 0.5)", padding: 16, borderRadius: 12, border: "1px solid var(--stroke)", textAlign: "center" }}>
                   <div className="muted" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>My Channels</div>
                   <div style={{ fontSize: 32, fontWeight: 800, color: "var(--accent2)" }}>{channels.length}</div>
                 </div>
@@ -133,21 +133,21 @@ export default function Account() {
             </div>
           </div>
 
-          <div className="card" style={{ background: "linear-gradient(135deg, rgba(250, 204, 21, 0.1), rgba(17, 27, 51, 0.8))", borderColor: "rgba(250, 204, 21, 0.2)" }}>
+          <div className="card" style={{ background: "linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(15, 23, 42, 0.8))", borderColor: "rgba(14, 165, 233, 0.2)" }}>
             <div className="card-body">
-              <h2 style={{ margin: "0 0 16px", fontSize: 18, display: "flex", alignItems: "center", gap: 8, color: "#fef08a" }}>
+              <h2 style={{ margin: "0 0 16px", fontSize: 18, display: "flex", alignItems: "center", gap: 8, color: "#bae6fd" }}>
                 <span>✨</span> Affiliate Program
               </h2>
               <p className="muted" style={{ marginBottom: 16, fontSize: 14 }}>
                 Invite your friends to Zyntra and earn commissions for every successful registration!
               </p>
-              <Link to="/affiliate" className="btn" style={{ display: "block", textAlign: "center", background: "linear-gradient(135deg, rgba(250,204,21,0.15), rgba(161,98,7,0.3))", borderColor: "rgba(250,204,21,0.5)", color: "#fef08a", fontWeight: 700, padding: "12px" }}>
+              <Link to="/affiliate" className="btn" style={{ display: "block", textAlign: "center", background: "linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(161,98,7,0.3))", borderColor: "rgba(14, 165, 233, 0.5)", color: "#bae6fd", fontWeight: 700, padding: "12px" }}>
                 Open Affiliate Dashboard
               </Link>
             </div>
           </div>
 
-          <div className="card" style={{ background: "linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(17, 27, 51, 0.8))", borderColor: "rgba(56, 189, 248, 0.2)" }}>
+          <div className="card" style={{ background: "linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(15, 23, 42, 0.8))", borderColor: "rgba(56, 189, 248, 0.2)" }}>
             <div className="card-body">
               <h2 style={{ margin: "0 0 16px", fontSize: 18, display: "flex", alignItems: "center", gap: 8 }}>
                 <span className="breathe" style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--danger)" }}></span> Live Center

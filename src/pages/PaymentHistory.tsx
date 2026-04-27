@@ -74,7 +74,7 @@ export default function PaymentHistory() {
     return (
       <Shell>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh" }}>
-          <div style={{ width: 40, height: 40, border: "3px solid rgba(255,255,255,0.1)", borderTopColor: "#3b82f6", borderRadius: "50%", animation: "spin 1s linear infinite" }}></div>
+          <div style={{ width: 40, height: 40, border: "3px solid rgba(15, 23, 42, 0.1)", borderTopColor: "#3b82f6", borderRadius: "50%", animation: "spin 1s linear infinite" }}></div>
         </div>
       </Shell>
     );
@@ -122,7 +122,7 @@ export default function PaymentHistory() {
                       <td style={{ fontWeight: 700 }}>
                         {p.amount} {p.currency}
                       </td>
-                      <td className="mono" style={{ fontSize: 13, color: "rgba(255,255,255,0.6)" }}>
+                      <td className="mono" style={{ fontSize: 13, color: "rgba(15, 23, 42, 0.6)" }}>
                         {p.reference || p.palmpesaTransid || p.selcomTransid || p.orderId || p.id}
                       </td>
                       <td>
@@ -154,7 +154,7 @@ export default function PaymentHistory() {
           </div>
           <style>{`
             .hover-row:hover td {
-              background: rgba(255, 255, 255, 0.05);
+              background: rgba(15, 23, 42, 0.05);
             }
           `}</style>
         </div>
@@ -164,7 +164,7 @@ export default function PaymentHistory() {
       {selectedPayment && (
         <div style={{
           position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-          background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)",
+          background: "rgba(15, 23, 42, 0.7)", backdropFilter: "blur(4px)",
           display: "flex", alignItems: "center", justifyContent: "center",
           zIndex: 9999, padding: 20
         }} onClick={() => setSelectedPayment(null)}>
@@ -173,7 +173,7 @@ export default function PaymentHistory() {
             style={{ 
               width: "100%", maxWidth: 450, maxHeight: "90vh", overflowY: "auto",
               animation: "slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)"
+              boxShadow: "0 25px 50px -12px rgba(15, 23, 42, 0.5)"
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -182,7 +182,7 @@ export default function PaymentHistory() {
                 <h2 style={{ margin: 0, fontSize: 20 }}>Transaction Details</h2>
                 <button 
                   onClick={() => setSelectedPayment(null)}
-                  style={{ background: "transparent", border: "none", color: "#a0aec0", cursor: "pointer", padding: 4 }}
+                  style={{ background: "transparent", border: "none", color: "#64748b", cursor: "pointer", padding: 4 }}
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -191,10 +191,10 @@ export default function PaymentHistory() {
                 </button>
               </div>
 
-              <div style={{ textAlign: "center", marginBottom: 30, padding: "20px 0", background: "rgba(255,255,255,0.03)", borderRadius: 12 }}>
-                <div style={{ fontSize: 14, color: "#a0aec0", textTransform: "uppercase", letterSpacing: 1, marginBottom: 5 }}>Amount</div>
-                <div style={{ fontSize: 36, fontWeight: 800, color: "#fff" }}>
-                  {selectedPayment.amount} <span style={{ fontSize: 20, color: "#a0aec0" }}>{selectedPayment.currency}</span>
+              <div style={{ textAlign: "center", marginBottom: 30, padding: "20px 0", background: "rgba(15, 23, 42, 0.03)", borderRadius: 12 }}>
+                <div style={{ fontSize: 14, color: "#64748b", textTransform: "uppercase", letterSpacing: 1, marginBottom: 5 }}>Amount</div>
+                <div style={{ fontSize: 36, fontWeight: 800, color: "#0f172a" }}>
+                  {selectedPayment.amount} <span style={{ fontSize: 20, color: "#64748b" }}>{selectedPayment.currency}</span>
                 </div>
                 <div style={{ marginTop: 15 }}>
                   <StatusBadge status={String(selectedPayment.status)} />
@@ -202,27 +202,27 @@ export default function PaymentHistory() {
               </div>
 
               <div className="grid" style={{ gap: 16 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 12 }}>
-                  <span style={{ color: "#a0aec0" }}>Date & Time</span>
+                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(15, 23, 42, 0.1)", paddingBottom: 12 }}>
+                  <span style={{ color: "#64748b" }}>Date & Time</span>
                   <span style={{ fontWeight: 500, textAlign: "right" }}>{new Date(Number(selectedPayment.createdAt)).toLocaleString()}</span>
                 </div>
                 
-                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 12 }}>
-                  <span style={{ color: "#a0aec0" }}>Order ID</span>
+                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(15, 23, 42, 0.1)", paddingBottom: 12 }}>
+                  <span style={{ color: "#64748b" }}>Order ID</span>
                   <span className="mono" style={{ fontSize: 13, textAlign: "right" }}>{selectedPayment.orderId || selectedPayment.id}</span>
                 </div>
                 
                 {(selectedPayment.reference || selectedPayment.palmpesaTransid || selectedPayment.selcomTransid) && (
-                  <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 12 }}>
-                    <span style={{ color: "#a0aec0" }}>Gateway Reference</span>
+                  <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(15, 23, 42, 0.1)", paddingBottom: 12 }}>
+                    <span style={{ color: "#64748b" }}>Gateway Reference</span>
                     <span className="mono" style={{ fontSize: 13, textAlign: "right" }}>
                       {selectedPayment.reference || selectedPayment.palmpesaTransid || selectedPayment.selcomTransid}
                     </span>
                   </div>
                 )}
                 
-                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 12 }}>
-                  <span style={{ color: "#a0aec0" }}>Betslip ID</span>
+                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(15, 23, 42, 0.1)", paddingBottom: 12 }}>
+                  <span style={{ color: "#64748b" }}>Betslip ID</span>
                   <span className="mono" style={{ fontSize: 13, textAlign: "right" }}>
                     {selectedPayment.betslipId ? (
                       <Link to={`/slip/${selectedPayment.betslipId}`} style={{ color: "#3b82f6" }}>
@@ -233,8 +233,8 @@ export default function PaymentHistory() {
                 </div>
 
                 {(selectedPayment.payment_status) && (
-                  <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 12 }}>
-                    <span style={{ color: "#a0aec0" }}>Gateway Status</span>
+                  <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(15, 23, 42, 0.1)", paddingBottom: 12 }}>
+                    <span style={{ color: "#64748b" }}>Gateway Status</span>
                     <span className="mono" style={{ fontSize: 13, textAlign: "right" }}>{selectedPayment.payment_status}</span>
                   </div>
                 )}

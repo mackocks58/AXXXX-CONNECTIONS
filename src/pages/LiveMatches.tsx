@@ -124,7 +124,7 @@ export default function LiveMatches() {
               </div>
 
               {/* Progress Bar */}
-              <div style={{ height: 6, background: "rgba(255,255,255,0.05)", position: "relative" }}>
+              <div style={{ height: 6, background: "rgba(15, 23, 42, 0.05)", position: "relative" }}>
                  <div style={{ 
                    height: "100%", 
                    width: `${Math.min(100, (selectedMatch.fixture.status.elapsed / 90) * 100)}%`, 
@@ -142,14 +142,14 @@ export default function LiveMatches() {
                 position: "relative",
                 margin: "12px",
                 borderRadius: 12,
-                border: "3px solid rgba(255,255,255,0.3)",
+                border: "3px solid rgba(15, 23, 42, 0.3)",
                 overflow: "hidden"
               }}>
                 {/* Pitch Markings */}
-                <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 2, background: "rgba(255,255,255,0.3)" }} />
-                <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)", width: 80, height: 80, border: "2px solid rgba(255,255,255,0.3)", borderRadius: "50%" }} />
-                <div style={{ position: "absolute", left: -2, top: "25%", bottom: "25%", width: "15%", border: "2px solid rgba(255,255,255,0.3)" }} />
-                <div style={{ position: "absolute", right: -2, top: "25%", bottom: "25%", width: "15%", border: "2px solid rgba(255,255,255,0.3)" }} />
+                <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 2, background: "rgba(15, 23, 42, 0.3)" }} />
+                <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)", width: 80, height: 80, border: "2px solid rgba(15, 23, 42, 0.3)", borderRadius: "50%" }} />
+                <div style={{ position: "absolute", left: -2, top: "25%", bottom: "25%", width: "15%", border: "2px solid rgba(15, 23, 42, 0.3)" }} />
+                <div style={{ position: "absolute", right: -2, top: "25%", bottom: "25%", width: "15%", border: "2px solid rgba(15, 23, 42, 0.3)" }} />
 
                 {/* Animated Ball */}
                 <div style={{ 
@@ -158,9 +158,9 @@ export default function LiveMatches() {
                   top: `${ballPos.y}%`, 
                   width: 14, 
                   height: 14, 
-                  background: "#fff", 
+                  background: "#0f172a", 
                   borderRadius: "50%", 
-                  boxShadow: "0 0 15px #fff",
+                  boxShadow: "0 0 15px #0f172a",
                   transition: "all 3s cubic-bezier(0.4, 0, 0.2, 1)",
                   zIndex: 10
                 }} />
@@ -171,17 +171,17 @@ export default function LiveMatches() {
                   bottom: 20, 
                   left: "50%", 
                   transform: "translateX(-50%)",
-                  background: "rgba(0,0,0,0.6)",
+                  background: "rgba(15, 23, 42, 0.6)",
                   backdropFilter: "blur(4px)",
                   padding: "8px 20px",
                   borderRadius: 20,
-                  color: attackSide === "neutral" ? "#fff" : "var(--accent)",
+                  color: attackSide === "neutral" ? "#0f172a" : "var(--accent)",
                   fontWeight: 800,
                   fontSize: 14,
                   textTransform: "uppercase",
                   letterSpacing: 1,
                   zIndex: 20,
-                  border: "1px solid rgba(255,255,255,0.1)"
+                  border: "1px solid rgba(15, 23, 42, 0.1)"
                 }}>
                   {actionText}
                 </div>
@@ -193,15 +193,15 @@ export default function LiveMatches() {
 
               {/* Match Stats Simulation (Placeholder) */}
               <div style={{ padding: 20, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, textAlign: "center" }}>
-                 <div className="card" style={{ padding: 12, background: "rgba(255,255,255,0.02)" }}>
+                 <div className="card" style={{ padding: 12, background: "rgba(15, 23, 42, 0.02)" }}>
                     <div style={{ fontSize: 10, color: "var(--muted)" }}>POSSESSION</div>
                     <div style={{ fontWeight: 800 }}>52% - 48%</div>
                  </div>
-                 <div className="card" style={{ padding: 12, background: "rgba(255,255,255,0.02)" }}>
+                 <div className="card" style={{ padding: 12, background: "rgba(15, 23, 42, 0.02)" }}>
                     <div style={{ fontSize: 10, color: "var(--muted)" }}>SHOTS ON TARGET</div>
                     <div style={{ fontWeight: 800 }}>4 - 2</div>
                  </div>
-                 <div className="card" style={{ padding: 12, background: "rgba(255,255,255,0.02)" }}>
+                 <div className="card" style={{ padding: 12, background: "rgba(15, 23, 42, 0.02)" }}>
                     <div style={{ fontSize: 10, color: "var(--muted)" }}>CORNERS</div>
                     <div style={{ fontWeight: 800 }}>6 - 3</div>
                  </div>

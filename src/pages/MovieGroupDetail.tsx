@@ -138,7 +138,7 @@ export default function MovieGroupDetail() {
     return (
       <Shell>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh" }}>
-          <div style={{ width: 40, height: 40, border: "3px solid rgba(255,255,255,0.1)", borderTopColor: "#3b82f6", borderRadius: "50%", animation: "spin 1s linear infinite" }}></div>
+          <div style={{ width: 40, height: 40, border: "3px solid rgba(15, 23, 42, 0.1)", borderTopColor: "#3b82f6", borderRadius: "50%", animation: "spin 1s linear infinite" }}></div>
         </div>
       </Shell>
     );
@@ -159,12 +159,12 @@ export default function MovieGroupDetail() {
              </div>
           </div>
           <div style={{ flex: "2 1 400px" }}>
-            <h1 style={{ fontSize: "clamp(24px, 6vw, 32px)", margin: 0, color: unlocked ? "var(--accent)" : "#fef08a", lineHeight: 1.2 }}>{group.name}</h1>
+            <h1 style={{ fontSize: "clamp(24px, 6vw, 32px)", margin: 0, color: unlocked ? "var(--accent)" : "#bae6fd", lineHeight: 1.2 }}>{group.name}</h1>
             <p className="muted" style={{ fontSize: "clamp(14px, 4vw, 16px)", margin: "8px 0 20px" }}>{group.description}</p>
             {!unlocked && (
-              <div className="card" style={{ border: "1px solid #facc15", background: "rgba(250, 204, 21, 0.05)" }}>
+              <div className="card" style={{ border: "1px solid #0ea5e9", background: "rgba(14, 165, 233, 0.05)" }}>
                 <div className="card-body" style={{ padding: "clamp(12px, 4vw, 20px)" }}>
-                  <h2 style={{ margin: 0, fontSize: "clamp(18px, 4vw, 20px)", color: "#fef08a" }}>Unlock this Group</h2>
+                  <h2 style={{ margin: 0, fontSize: "clamp(18px, 4vw, 20px)", color: "#bae6fd" }}>Unlock this Group</h2>
                   <p className="muted" style={{ margin: "4px 0 16px", fontSize: 13 }}>Pay once to get lifetime access to all movies in this group.</p>
                   
                   {payError && <div className="alert" style={{ marginBottom: 12 }}>{payError}</div>}
@@ -178,7 +178,7 @@ export default function MovieGroupDetail() {
                       <label>Phone (255...)</label>
                       <input className="input" value={buyerPhone} onChange={e => setBuyerPhone(e.target.value)} placeholder="2557XXXXXXXX" />
                     </div>
-                    <button className="btn" disabled={payBusy} onClick={startPayment} style={{ background: "#facc15", color: "#000", fontWeight: 800 }}>
+                    <button className="btn" disabled={payBusy} onClick={startPayment} style={{ background: "#0ea5e9", color: "#000", fontWeight: 800 }}>
                       {payBusy ? "Processing..." : `Unlock for ${group.amount} ${group.currency}`}
                     </button>
                   </div>
@@ -209,13 +209,13 @@ export default function MovieGroupDetail() {
                   {movie.youtubeId ? (
                     <img src={`https://img.youtube.com/vi/${movie.youtubeId}/hqdefault.jpg`} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover" }} />
                   ) : (
-                    <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(45deg, #050816, #1a1a1a)" }}>
+                    <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(45deg, #0f172a, #1a1a1a)" }}>
                        <span style={{ fontSize: 32 }}>🎞️</span>
                     </div>
                   )}
-                  <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(15, 23, 42, 0.3)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <div style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 15px rgba(16, 185, 129, 0.4)" }}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="#0f172a"><path d="M8 5v14l11-7z"/></svg>
                     </div>
                   </div>
                 </div>
@@ -231,13 +231,13 @@ export default function MovieGroupDetail() {
 
       {activeMovie && (
         <div 
-          style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.9)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(8px)" }}
+          style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(15, 23, 42, 0.9)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(8px)" }}
           onClick={() => setActiveMovie(null)}
         >
           <div style={{ width: "90%", maxWidth: 1000, position: "relative" }} onClick={e => e.stopPropagation()}>
             <button 
               onClick={() => setActiveMovie(null)}
-              style={{ position: "absolute", top: -40, right: 0, background: "none", border: "none", color: "#fff", fontSize: 24, cursor: "pointer" }}
+              style={{ position: "absolute", top: -40, right: 0, background: "none", border: "none", color: "#0f172a", fontSize: 24, cursor: "pointer" }}
             >✕ Close</button>
             <div style={{ position: "relative", paddingTop: "56.25%", background: "#000", borderRadius: 16, overflow: "hidden", border: "1px solid var(--stroke)" }}>
               {activeMovie.videoUrl ? (
@@ -256,7 +256,7 @@ export default function MovieGroupDetail() {
                 />
               )}
             </div>
-            <h2 style={{ marginTop: 16, color: "#fff" }}>{activeMovie.title}</h2>
+            <h2 style={{ marginTop: 16, color: "#0f172a" }}>{activeMovie.title}</h2>
           </div>
         </div>
       )}

@@ -85,10 +85,10 @@ export default function Affiliate() {
     <Shell>
       <div style={{ marginBottom: 32, textAlign: "center", position: "relative" }}>
         {/* Glow effect behind title */}
-        <div className="breathe" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 200, height: 100, background: "radial-gradient(ellipse, rgba(250, 204, 21, 0.25) 0%, transparent 70%)", zIndex: -1 }}></div>
+        <div className="breathe" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 200, height: 100, background: "radial-gradient(ellipse, rgba(14, 165, 233, 0.25) 0%, transparent 70%)", zIndex: -1 }}></div>
         
-        <h1 className="page-title" style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "linear-gradient(to right, #fef08a, #facc15)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-          <span className="breathe" style={{ display: "inline-block", color: "#facc15" }}>✨</span> Affiliate Program
+        <h1 className="page-title" style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "linear-gradient(to right, #bae6fd, #0ea5e9)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          <span className="breathe" style={{ display: "inline-block", color: "#0ea5e9" }}>✨</span> Affiliate Program
         </h1>
         <p className="muted" style={{ margin: "0 0 16px 0" }}>Invite your friends to Zyntra and earn commissions!</p>
       </div>
@@ -99,27 +99,27 @@ export default function Affiliate() {
         <div className="grid" style={{ gap: 24 }}>
           {/* Stats Row */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
-            <div className="card" style={{ background: "linear-gradient(135deg, rgba(161, 98, 7, 0.2), rgba(5, 8, 22, 0.9))", border: "1px solid rgba(250, 204, 21, 0.3)", padding: 24, textAlign: "center", borderRadius: 20 }}>
-              <div style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", color: "#fef08a", opacity: 0.8 }}>Total Referrals</div>
-              <div style={{ fontSize: 48, fontWeight: 900, color: "#facc15", textShadow: "0 0 20px rgba(250,204,21,0.5)" }}>{referrals.length}</div>
+            <div className="card" style={{ background: "linear-gradient(135deg, rgba(161, 98, 7, 0.2), rgba(248, 250, 252, 0.9))", border: "1px solid rgba(14, 165, 233, 0.3)", padding: 24, textAlign: "center", borderRadius: 20 }}>
+              <div style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", color: "#bae6fd", opacity: 0.8 }}>Total Referrals</div>
+              <div style={{ fontSize: 48, fontWeight: 900, color: "#0ea5e9", textShadow: "0 0 20px rgba(14, 165, 233, 0.5)" }}>{referrals.length}</div>
             </div>
           </div>
 
           {/* Share Section */}
-          <div className="card" style={{ padding: 24, border: "1px solid rgba(250, 204, 21, 0.4)", position: "relative", overflow: "hidden", borderRadius: 20 }}>
-            <div style={{ position: "absolute", top: -50, right: -50, width: 200, height: 200, background: "radial-gradient(circle, rgba(250,204,21,0.1) 0%, transparent 60%)", borderRadius: "50%" }}></div>
-            <h3 style={{ margin: "0 0 12px 0", fontSize: 20, color: "#fef08a" }}>Your Unique Link</h3>
+          <div className="card" style={{ padding: 24, border: "1px solid rgba(14, 165, 233, 0.4)", position: "relative", overflow: "hidden", borderRadius: 20 }}>
+            <div style={{ position: "absolute", top: -50, right: -50, width: 200, height: 200, background: "radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, transparent 60%)", borderRadius: "50%" }}></div>
+            <h3 style={{ margin: "0 0 12px 0", fontSize: 20, color: "#bae6fd" }}>Your Unique Link</h3>
             <p className="muted" style={{ marginBottom: 20, fontSize: 14 }}>Share this link! When someone registers, they'll be added to your referral network.</p>
             
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <div style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(250, 204, 21, 0.3)", borderRadius: 12, padding: "12px", overflowX: "auto" }}>
-                <span className="mono" style={{ color: "#facc15", fontSize: 15, fontWeight: "bold", letterSpacing: "0.05em", whiteSpace: "nowrap" }}>
+              <div style={{ background: "rgba(15, 23, 42, 0.4)", border: "1px solid rgba(14, 165, 233, 0.3)", borderRadius: 12, padding: "12px", overflowX: "auto" }}>
+                <span className="mono" style={{ color: "#0ea5e9", fontSize: 15, fontWeight: "bold", letterSpacing: "0.05em", whiteSpace: "nowrap" }}>
                   {window.location.origin}/register?ref={affiliateCode}
                 </span>
               </div>
               
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <button className="btn" onClick={copyLink} style={{ flex: 1, background: "rgba(250,204,21,0.15)", borderColor: "rgba(250,204,21,0.5)", color: "#facc15", fontWeight: "bold", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: 14 }}>
+                <button className="btn" onClick={copyLink} style={{ flex: 1, background: "rgba(14, 165, 233, 0.15)", borderColor: "rgba(14, 165, 233, 0.5)", color: "#0ea5e9", fontWeight: "bold", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: 14 }}>
                   {copied ? (
                     <>
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -139,9 +139,9 @@ export default function Affiliate() {
               </div>
             </div>
             
-            <div style={{ marginTop: 24, padding: "16px 20px", background: "rgba(250,204,21,0.05)", borderRadius: 12, border: "1px solid rgba(250,204,21,0.1)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ marginTop: 24, padding: "16px 20px", background: "rgba(14, 165, 233, 0.05)", borderRadius: 12, border: "1px solid rgba(14, 165, 233, 0.1)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <span style={{ fontSize: 13, color: "var(--muted)" }}>Your Code:</span> 
-              <span className="mono" style={{ fontSize: 24, fontWeight: 900, color: "#fef08a" }}>{affiliateCode}</span>
+              <span className="mono" style={{ fontSize: 24, fontWeight: 900, color: "#bae6fd" }}>{affiliateCode}</span>
             </div>
           </div>
 
@@ -150,7 +150,7 @@ export default function Affiliate() {
             <h3 style={{ margin: "0 0 20px 0", fontSize: 18 }}>Recent Referrals</h3>
             
             {referrals.length === 0 ? (
-              <div className="alert" style={{ textAlign: "center", background: "rgba(255,255,255,0.02)", borderColor: "var(--stroke)", color: "var(--muted)" }}>
+              <div className="alert" style={{ textAlign: "center", background: "rgba(15, 23, 42, 0.02)", borderColor: "var(--stroke)", color: "var(--muted)" }}>
                 You haven't referred anyone yet. Share your link to start earning!
               </div>
             ) : (
