@@ -142,39 +142,52 @@ app.post("/api/checkout/init", async (req, res) => {
       title
     };
 
+    // Save session to Firebase first
     await db.ref(`checkoutSessions/${orderId}`).set(session);
     await db.ref(`userPayments/${uid}/${orderId}`).update(session);
 
-    const palmpesaResp = await createPalmpesaOrder({
-      apiKey, userId, vendor, orderId,
-      buyerEmail: String(buyer.email).trim(),
-      buyerName: String(buyer.name).trim(),
-      buyerPhone: String(buyer.phone).trim(),
-      amount: cost,
-      webhookUrl,
-    });
-
-    if (!isPalmpesaSuccess(palmpesaResp)) {
-      await db.ref(`checkoutSessions/${orderId}`).update({ status: "palmpesa_error", palmpesa: palmpesaResp });
-      await db.ref(`userPayments/${uid}/${orderId}`).update({ status: "failed", updatedAt: Date.now() });
-      return res.status(502).json({ error: palmpesaResp?.message || "Order creation failed." });
-    }
-
-    await db.ref(`checkoutSessions/${orderId}`).update({
-      status: "awaiting_payment",
-      palmpesaReference: palmpesaResp?.order_id ?? null,
-    });
-
-    if (palmpesaResp?.order_id) {
-      await db.ref(`checkoutSessions/${palmpesaResp.order_id}`).set({
-        aliasFor: orderId, uid, betslipId: betslipId || null, movieGroupId: movieGroupId || null, amount: cost, currency
-      });
-    }
-
+    // ✅ Respond immediately to the client — don't wait for PalmPesa
     res.json({ orderId, message: "Payment initiated. Check your phone." });
+
+    // 🔄 Call PalmPesa in the background (after response is sent)
+    try {
+      const palmpesaResp = await createPalmpesaOrder({
+        apiKey, userId, vendor, orderId,
+        buyerEmail: String(buyer.email).trim(),
+        buyerName: String(buyer.name).trim(),
+        buyerPhone: String(buyer.phone).trim(),
+        amount: cost,
+        webhookUrl,
+      });
+
+      console.log("PalmPesa response for", orderId, ":", JSON.stringify(palmpesaResp));
+
+      if (!isPalmpesaSuccess(palmpesaResp)) {
+        await db.ref(`checkoutSessions/${orderId}`).update({ status: "palmpesa_error", palmpesa: palmpesaResp });
+        await db.ref(`userPayments/${uid}/${orderId}`).update({ status: "failed", updatedAt: Date.now() });
+        return;
+      }
+
+      await db.ref(`checkoutSessions/${orderId}`).update({
+        status: "awaiting_payment",
+        palmpesaReference: palmpesaResp?.order_id ?? null,
+      });
+
+      if (palmpesaResp?.order_id) {
+        await db.ref(`checkoutSessions/${palmpesaResp.order_id}`).set({
+          aliasFor: orderId, uid, betslipId: betslipId || null, movieGroupId: movieGroupId || null, amount: cost, currency
+        });
+      }
+    } catch (bgErr) {
+      console.error("Background PalmPesa error for", orderId, ":", bgErr?.message);
+      await db.ref(`checkoutSessions/${orderId}`).update({ status: "palmpesa_error", error: bgErr?.message }).catch(() => {});
+    }
+
   } catch (e) {
     console.error(e);
-    res.status(500).json({ error: e?.message || "Server error" });
+    if (!res.headersSent) {
+      res.status(500).json({ error: e?.message || "Server error" });
+    }
   }
 });
 
