@@ -319,9 +319,9 @@ export default function MovieGroupDetail() {
               style={{ position: "absolute", top: -40, right: 0, background: "none", border: "none", color: "#0f172a", fontSize: 24, cursor: "pointer" }}
             >✕ Close</button>
             <div style={{ position: "relative", paddingTop: "56.25%", background: "#000", borderRadius: 16, overflow: "hidden", border: "1px solid var(--stroke)" }}>
-              {activeMovie.videoUrl ? (
+              {activeMovie.localFilename || activeMovie.videoUrl ? (
                 <video 
-                  src={activeMovie.videoUrl} 
+                  src={activeMovie.localFilename ? `/videos/${activeMovie.groupId}/${activeMovie.localFilename}` : activeMovie.videoUrl} 
                   controls 
                   autoPlay 
                   style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }} 

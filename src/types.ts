@@ -68,6 +68,7 @@ export type Movie = {
   title: string;
   youtubeId?: string;
   videoUrl?: string;
+  localFilename?: string;
   duration?: string;
   createdAt: number;
 };

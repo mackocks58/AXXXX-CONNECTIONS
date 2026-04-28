@@ -14,7 +14,7 @@ export function AdminMovies() {
   
   const [mTitle, setMTitle] = useState("");
   const [mYoutube, setMYoutube] = useState("");
-  const [mFile, setMFile] = useState<File | null>(null);
+  const [mLocalFile, setMLocalFile] = useState("");
   const [mGroup, setMGroup] = useState("");
   
   const [busy, setBusy] = useState(false);
@@ -62,36 +62,21 @@ export function AdminMovies() {
   async function addMovie(e: React.FormEvent) {
     e.preventDefault();
     if (!mGroup) { setErr("Select a group first."); return; }
-    if (!mYoutube && !mFile) { setErr("Provide a YouTube ID or upload a video file."); return; }
+    if (!mYoutube && !mLocalFile) { setErr("Provide a YouTube ID or a local filename."); return; }
 
     setBusy(true); setErr(null); setMsg(null);
 
     try {
-      let videoData = "";
-      if (mFile) {
-        // Limit warning: RTDB has a 10MB limit per node.
-        if (mFile.size > 10 * 1024 * 1024) {
-          throw new Error("File too large. Realtime Database only supports files up to 10MB. For larger movies, please use YouTube or Storage.");
-        }
-
-        const reader = new FileReader();
-        videoData = await new Promise<string>((resolve, reject) => {
-          reader.onload = () => resolve(reader.result as string);
-          reader.onerror = () => reject(new Error("Failed to read video file"));
-          reader.readAsDataURL(mFile);
-        });
-      }
-
       const key = push(ref(db, "movies")).key;
       await set(ref(db, `movies/${key}`), {
         title: mTitle,
         youtubeId: mYoutube || null,
-        videoUrl: videoData || null, // Storing Base64 directly in RTDB
+        localFilename: mLocalFile || null,
         groupId: mGroup,
         createdAt: Date.now()
       });
       setMsg("Movie added successfully.");
-      setMTitle(""); setMYoutube(""); setMFile(null);
+      setMTitle(""); setMYoutube(""); setMLocalFile("");
     } catch (e: any) { setErr(e.message); }
     finally { setBusy(false); }
   }
@@ -160,8 +145,9 @@ export function AdminMovies() {
               </div>
               <div style={{ textAlign: "center", color: "var(--muted)", fontSize: 12 }}>- OR -</div>
               <div className="field">
-                <label>Source: Upload Video File</label>
-                <input type="file" accept="video/*" onChange={e => setMFile(e.target.files?.[0] ?? null)} />
+                <label>Source: Local Filename</label>
+                <input className="input" value={mLocalFile} onChange={e => setMLocalFile(e.target.value)} placeholder="e.g. movie1.mp4" />
+                <p className="muted" style={{ fontSize: 11, marginTop: 4 }}>Place the actual file at <code>public/videos/GROUP_ID/filename.mp4</code></p>
               </div>
               <button className="btn" type="submit" disabled={busy}>
                 {busy ? "Processing..." : "Add Movie"}
@@ -199,7 +185,7 @@ export function AdminMovies() {
                  {movieList.map(m => (
                    <tr key={m.id}>
                      <td style={{ paddingLeft: 32 }}>🎬 {m.title}</td>
-                     <td style={{ fontSize: 11 }}>{m.youtubeId ? "YouTube" : "Uploaded File"}</td>
+                     <td style={{ fontSize: 11 }}>{m.youtubeId ? "YouTube" : m.localFilename ? `Local (${m.localFilename})` : "Uploaded File"}</td>
                      <td><button className="btn btn-danger btn-sm" onClick={() => deleteMovie(m.id)}>Delete</button></td>
                    </tr>
                  ))}
