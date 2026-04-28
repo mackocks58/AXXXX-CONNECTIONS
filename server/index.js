@@ -345,6 +345,38 @@ app.get("/api/checkout/status/:orderId", async (req, res) => {
   }
 });
 
+app.post("/api/checkout/cancel/:orderId", async (req, res) => {
+  try {
+    const admin = getAdmin();
+    const db = admin.database();
+    const actualOrderId = req.params.orderId;
+    
+    let sessionSnap = await db.ref(`checkoutSessions/${actualOrderId}`).get();
+    if (!sessionSnap.exists()) {
+      return res.status(404).json({ error: "Session not found" });
+    }
+    let session = sessionSnap.val();
+
+    if (session.status !== "completed") {
+      await db.ref(`checkoutSessions/${actualOrderId}`).update({
+        status: "failed",
+        updatedAt: Date.now(),
+        reason: "timeout_cancelled_by_client"
+      });
+      if (session.uid) {
+        await db.ref(`userPayments/${session.uid}/${actualOrderId}`).update({
+          status: "failed",
+          updatedAt: Date.now(),
+        });
+      }
+    }
+    return res.json({ status: "failed", message: "Transaction cancelled." });
+  } catch (e) {
+    console.error("Cancel error:", e);
+    res.status(500).json({ error: "Error cancelling transaction" });
+  }
+});
+
 app.all("/api/palmpesa/webhook", async (req, res) => {
   try {
     const admin = getAdmin();
