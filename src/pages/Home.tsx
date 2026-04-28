@@ -186,17 +186,16 @@ export default function Home() {
                   position: "absolute",
                   top: 12,
                   left: 12,
-                  background: "rgba(15, 23, 42, 0.8)",
+                  background: "linear-gradient(90deg, #ef4444, #dc2626)",
                   color: "#fff",
                   padding: "4px 10px",
                   borderRadius: 20,
                   fontSize: 12,
-                  fontWeight: 700,
+                  fontWeight: 800,
                   display: "flex",
                   alignItems: "center",
                   gap: 6,
-                  backdropFilter: "blur(4px)",
-                  boxShadow: "0 2px 10px rgba(0,0,0,0.5)",
+                  boxShadow: "0 4px 15px rgba(239, 68, 68, 0.4)",
                   zIndex: 2
                 }}>
                   🎞️ {movieCount} {movieCount === 1 ? "Movie" : "Movies"}
