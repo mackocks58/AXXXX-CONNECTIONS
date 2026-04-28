@@ -106,7 +106,6 @@ export default function PaymentHistory() {
                     <th>Status</th>
                     <th>Amount</th>
                     <th>Reference</th>
-                    <th>Betslip</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -125,25 +124,11 @@ export default function PaymentHistory() {
                       <td className="mono" style={{ fontSize: 13, color: "rgba(15, 23, 42, 0.6)" }}>
                         {p.reference || p.palmpesaTransid || p.selcomTransid || p.orderId || p.id}
                       </td>
-                      <td>
-                        {p.betslipId ? (
-                          <Link 
-                            className="btn btn-ghost" 
-                            to={`/slip/${p.betslipId}`}
-                            onClick={(e) => e.stopPropagation()}
-                            style={{ padding: "4px 10px", fontSize: 12 }}
-                          >
-                            View slip
-                          </Link>
-                        ) : (
-                          <span className="muted">—</span>
-                        )}
-                      </td>
                     </tr>
                   ))}
                   {!list.length && (
                     <tr>
-                      <td colSpan={5} className="muted" style={{ textAlign: "center", padding: "40px 20px" }}>
+                      <td colSpan={4} className="muted" style={{ textAlign: "center", padding: "40px 20px" }}>
                         You haven't made any payments yet.
                       </td>
                     </tr>
@@ -221,17 +206,6 @@ export default function PaymentHistory() {
                   </div>
                 )}
                 
-                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(15, 23, 42, 0.1)", paddingBottom: 12 }}>
-                  <span style={{ color: "#64748b" }}>Betslip ID</span>
-                  <span className="mono" style={{ fontSize: 13, textAlign: "right" }}>
-                    {selectedPayment.betslipId ? (
-                      <Link to={`/slip/${selectedPayment.betslipId}`} style={{ color: "#3b82f6" }}>
-                        {selectedPayment.betslipId}
-                      </Link>
-                    ) : "—"}
-                  </span>
-                </div>
-
                 {(selectedPayment.payment_status) && (
                   <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(15, 23, 42, 0.1)", paddingBottom: 12 }}>
                     <span style={{ color: "#64748b" }}>Gateway Status</span>
