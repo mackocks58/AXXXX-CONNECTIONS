@@ -19,8 +19,18 @@ function initAdmin() {
   const localPath = join(__dirname, "..", "serviceAccount.json");
 
   if (jsonRaw) {
+    let certObj;
+    try {
+      certObj = JSON.parse(jsonRaw);
+      if (certObj.private_key) {
+        // Fix for Vercel mangling newlines in env vars
+        certObj.private_key = certObj.private_key.replace(/\\n/g, '\n');
+      }
+    } catch (e) {
+      throw new Error("Invalid FIREBASE_SERVICE_ACCOUNT_JSON format: " + e.message);
+    }
     admin.initializeApp({
-      credential: admin.credential.cert(JSON.parse(jsonRaw)),
+      credential: admin.credential.cert(certObj),
       databaseURL,
     });
   } else if (jsonPath && existsSync(jsonPath)) {

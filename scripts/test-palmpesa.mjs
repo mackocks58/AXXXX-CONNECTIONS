@@ -14,8 +14,8 @@ const TEST_AMOUNT = 100;           // TZS
 
 function formatPhone(raw) {
   let p = raw.replace(/\s+/g, "").replace(/^\+/, "");
-  if (p.startsWith("0"))       return "255" + p.substring(1);
-  if (!p.startsWith("255") && p.length === 9) return "255" + p;
+  if (p.startsWith("255")) return "0" + p.substring(3);
+  if (p.length === 9 && !p.startsWith("0")) return "0" + p;
   return p;
 }
 
@@ -45,7 +45,7 @@ const body = {
   vendor         : VENDOR || "",
   name           : TEST_NAME,
   email          : TEST_EMAIL,
-  phone          : phone,
+  phone          : TEST_PHONE,
   amount         : TEST_AMOUNT,
   transaction_id : orderId,
   address        : "Tanzania",

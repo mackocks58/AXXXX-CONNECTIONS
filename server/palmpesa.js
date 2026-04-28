@@ -12,12 +12,12 @@ export async function createPalmpesaOrder({
 }) {
   const url = "https://palmpesa.drmlelwa.co.tz/api/palmpesa/initiate";
 
-  // Phone formatting: Many TZ APIs prefer 2557XXXXXXXX format
+  // Phone formatting: USSD push often requires 07XXXXXXXX format instead of 2557XXXXXXXX
   let phone = buyerPhone.replace(/\s+/g, "").replace(/^\+/, "");
-  if (phone.startsWith("0")) {
-    phone = "255" + phone.substring(1);
-  } else if (!phone.startsWith("255") && phone.length === 9) {
-    phone = "255" + phone;
+  if (phone.startsWith("255")) {
+    phone = "0" + phone.substring(3);
+  } else if (phone.length === 9 && !phone.startsWith("0")) {
+    phone = "0" + phone;
   }
 
   const body = {
