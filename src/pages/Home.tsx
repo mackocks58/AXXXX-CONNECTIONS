@@ -108,7 +108,7 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="grid cols-3 cols-3-mobile" style={{ gap: "clamp(16px, 3vw, 24px)", padding: "0 8px" }}>
+      <div className="grid cols-2 cols-2-mobile" style={{ gap: "clamp(12px, 3vw, 24px)", padding: "0 8px" }}>
         {groups.map((group) => {
           const unlocked = isPurchased(group.id!);
           const movieCount = getMovieCount(group.id!);
@@ -138,7 +138,25 @@ export default function Home() {
                 e.currentTarget.style.borderColor = "var(--stroke)"; 
               }}
             >
-              <div style={{ position: "relative", width: "100%", paddingTop: "100%" }}>
+              {/* Colorful Group Title Banner */}
+              <div style={{
+                background: "linear-gradient(90deg, #0ea5e9, #10b981)",
+                padding: "12px 10px",
+                textAlign: "center",
+                color: "#ffffff",
+                fontWeight: 800,
+                fontSize: "clamp(14px, 4vw, 18px)",
+                letterSpacing: "0.02em",
+                textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+                borderBottom: "1px solid rgba(255,255,255,0.1)",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis"
+              }}>
+                {group.name}
+              </div>
+
+              <div style={{ position: "relative", width: "100%", paddingTop: "85%" }}>
                 <img 
                   src={group.thumbnail}
                   alt={group.name}
@@ -220,10 +238,7 @@ export default function Home() {
                 )}
               </div>
               <div className="card-body" style={{ padding: "12px 16px" }}>
-                <h3 style={{ margin: 0, fontSize: "clamp(16px, 4vw, 18px)", fontWeight: 700, color: unlocked ? "var(--accent)" : "#bae6fd" }}>
-                  {group.name}
-                </h3>
-                <p style={{ margin: "6px 0 0 0", fontSize: 13, color: "var(--muted)", lineHeight: 1.4, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                <p style={{ margin: "0", fontSize: 13, color: "var(--muted)", lineHeight: 1.4, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                   {group.description}
                 </p>
               </div>
