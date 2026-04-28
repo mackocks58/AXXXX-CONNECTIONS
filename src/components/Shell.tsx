@@ -15,7 +15,7 @@ export function Shell({ children }: { children: ReactNode }) {
         <input 
           type="text" 
           className="search-input" 
-          placeholder="Search premium betslips, matches, or codes..." 
+          placeholder="Search movies or groups..." 
           value={query}
           onChange={(e) => {
             const val = e.target.value;

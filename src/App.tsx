@@ -2,7 +2,6 @@ import type { ReactElement } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import Home from "@/pages/Home";
-import BetslipDetail from "@/pages/BetslipDetail";
 import MovieGroupDetail from "@/pages/MovieGroupDetail";
 import Login from "@/pages/Login";
 import ForgotPassword from "@/pages/ForgotPassword";
@@ -10,11 +9,9 @@ import Register from "@/pages/Register";
 import Admin from "@/pages/Admin";
 import PaymentHistory from "@/pages/PaymentHistory";
 import Support from "@/pages/Support";
-import Chat from "@/pages/Chat";
 import PaymentReturn from "@/pages/PaymentReturn";
 import PaymentCancel from "@/pages/PaymentCancel";
 import Account from "@/pages/Account";
-import Betslips from "@/pages/Betslips";
 import Notifications from "@/pages/Notifications";
 import Movies from "@/pages/Movies";
 import Affiliate from "@/pages/Affiliate";
@@ -45,7 +42,6 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/affiliate" element={<Affiliate />} />
         <Route path="/live" element={<LiveMatches />} />
-        <Route path="/slip/:id" element={<BetslipDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/register" element={<Register />} />
@@ -53,8 +49,6 @@ export default function App() {
         <Route path="/support" element={<Support />} />
         <Route path="/account" element={<Account />} />
         <Route path="/notifications" element={<Notifications />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/betslips" element={<Betslips />} />
         <Route path="/payment/return" element={<PaymentReturn />} />
         <Route path="/payment/cancel" element={<PaymentCancel />} />
         <Route path="/movies" element={<Movies />} />
