@@ -7,25 +7,6 @@ import { useAuth } from "@/context/AuthContext";
 import { apiUrl } from "@/lib/apiBase";
 import type { Movie, MovieGroup, Purchase } from "@/types";
 
-const FALLBACK_MOVIES: Record<string, Movie[]> = {
-  "connection-bongo": [
-    { title: "Bongo Connection Part 1", youtubeId: "QdBZY2fkU-0", groupId: "connection-bongo", createdAt: 1713744000000 },
-    { title: "Bongo Connection Part 2", youtubeId: "TcMBFSGVi1c", groupId: "connection-bongo", createdAt: 1713744000000 }
-  ],
-  "bongo-wiki-hii": [
-    { title: "Bongo Movie of the Week", youtubeId: "JfVOs4VSpmA", groupId: "bongo-wiki-hii", createdAt: 1713744000000 }
-  ],
-  "action-movies": [
-    { title: "Epic Action Trailer", youtubeId: "YoHD9XEInc0", groupId: "action-movies", createdAt: 1713744000000 },
-    { title: "High Speed Chase", youtubeId: "zSWdZVtXT7E", groupId: "action-movies", createdAt: 1713744000000 }
-  ],
-  "seasons": [
-    { title: "Season 1 Premiere", youtubeId: "EXeTwQWrcwY", groupId: "seasons", createdAt: 1713744000000 }
-  ],
-  "connection-tia": [
-    { title: "Campus Life TIA", youtubeId: "zAGVQLHvwOY", groupId: "connection-tia", createdAt: 1713744000000 }
-  ]
-};
 
 const DEFAULT_GROUPS: Record<string, MovieGroup> = {
   "connection-bongo": { id: "connection-bongo", name: "Connection Za Bongo", thumbnail: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=1000", amount: 1000, currency: "TZS", description: "The most trending bongo connections and dramas.", createdAt: 1713744000000 },
@@ -118,9 +99,8 @@ export default function MovieGroupDetail() {
   }, [user]);
 
   const finalMovies = useMemo(() => {
-    if (movies) return movies;
-    return groupId && FALLBACK_MOVIES[groupId] ? FALLBACK_MOVIES[groupId] : [];
-  }, [movies, groupId]);
+    return movies || [];
+  }, [movies]);
 
   const { unlocked, daysLeft } = useMemo(() => {
     if (purchase?.status === "completed") {
