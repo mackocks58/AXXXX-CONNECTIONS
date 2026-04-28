@@ -86,18 +86,30 @@ app.post("/api/checkout/init", async (req, res) => {
         const admin = getAdmin();
         const { idToken, betslipId, movieGroupId, buyer } = req.body || {};
         
-        if (!idToken || (!betslipId && !movieGroupId) || !buyer?.name || !buyer?.email || !buyer?.phone) {
-          return res.status(400).json({ error: "Missing idToken, betslipId/movieGroupId, or buyer details." });
+        if ((!betslipId && !movieGroupId) || !buyer?.phone) {
+          return res.status(400).json({ error: "Missing betslipId/movieGroupId or phone number." });
         }
 
-        const nameParts = String(buyer.name).trim().split(/\s+/);
-        if (nameParts.length < 2) {
-          return res.status(400).json({ error: "Full name must include at least two words." });
-        }
+        // Force default name and email for everyone (per user request)
+        const finalName = "MOVIES COMPANY";
+        const finalEmail = "movies@company.com";
+        let finalPhone = String(buyer.phone).trim();
 
-        currentStep = "Verifying ID Token";
-        const decoded = await admin.auth().verifyIdToken(idToken);
-        const uid = decoded.uid;
+        // 255 format formatting (similar to palmpesa.js)
+        let formattedPhone = finalPhone.replace(/\s+/g, "").replace(/^\+/, "");
+        if (formattedPhone.startsWith("0")) formattedPhone = "255" + formattedPhone.slice(1);
+        else if (!formattedPhone.startsWith("255") && formattedPhone.length === 9) formattedPhone = "255" + formattedPhone;
+        
+        let uid = formattedPhone; // default guest UID is the phone number
+        currentStep = "Verifying ID Token (if provided)";
+        if (idToken) {
+          try {
+            const decoded = await admin.auth().verifyIdToken(idToken);
+            uid = decoded.uid;
+          } catch(e) {
+            console.error("Invalid idToken provided, defaulting to guest checkout", e);
+          }
+        }
 
         currentStep = "Connecting to Firebase Database";
         const db = admin.database();
@@ -169,9 +181,9 @@ app.post("/api/checkout/init", async (req, res) => {
           const { createPalmpesaOrder } = await import("./palmpesa.js");
           palmpesaResp = await createPalmpesaOrder({
             apiKey, userId, vendor, orderId,
-            buyerEmail: String(buyer.email).trim(),
-            buyerName: String(buyer.name).trim(),
-            buyerPhone: String(buyer.phone).trim(),
+            buyerEmail: finalEmail,
+            buyerName: finalName,
+            buyerPhone: formattedPhone,
             amount: cost,
             webhookUrl,
           });

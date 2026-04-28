@@ -1,221 +1,236 @@
-import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
 import { onValue, ref } from "firebase/database";
 import { db } from "@/firebase";
 import { Shell } from "@/components/Shell";
-import { TeamDetailsModal } from "@/components/TeamDetailsModal";
+import { useAuth } from "@/context/AuthContext";
+import { Link } from "react-router-dom";
+import type { MovieGroup, Movie } from "@/types";
 
-export type Match = {
-  id: string;
-  homeTeam: string;
-  awayTeam: string;
-  homeLogo: string;
-  awayLogo: string;
-  time: string;
-  league: string;
-  status: string;
-  createdAt: number;
-  homeScore: number | null;
-  awayScore: number | null;
-  homeTeamId?: number;
-  awayTeamId?: number;
-  leagueId?: number;
-  season?: number;
-};
+const DEFAULT_GROUPS: MovieGroup[] = [
+  { id: "connection-bongo", name: "Connection Za Bongo", thumbnail: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=1000", amount: 1000, currency: "TZS", description: "The most trending bongo connections and dramas.", createdAt: 1713744000000 },
+  { id: "bongo-wiki-hii", name: "Bongo Wiki Hii", thumbnail: "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=1000", amount: 500, currency: "TZS", description: "New Tanzanian movies released this week.", createdAt: 1713744000000 },
+  { id: "action-movies", name: "Action Movies", thumbnail: "https://images.unsplash.com/photo-1535016120720-40c646bebbbb?auto=format&fit=crop&q=80&w=1000", amount: 1500, currency: "TZS", description: "Hollywood and International high-octane action.", createdAt: 1713744000000 },
+  { id: "seasons", name: "Seasons", thumbnail: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?auto=format&fit=crop&q=80&w=1000", amount: 2000, currency: "TZS", description: "Complete series and trending TV seasons.", createdAt: 1713744000000 },
+  { id: "connection-tia", name: "Connection TIA", thumbnail: "https://images.unsplash.com/photo-1523050853063-bd75160b332a?auto=format&fit=crop&q=80&w=1000", amount: 1000, currency: "TZS", description: "Exclusive University lifestyle and campus stories.", createdAt: 1713744000000 }
+];
 
 export default function Home() {
-  const [firebaseMatches, setFirebaseMatches] = useState<Record<string, Match> | null>(null);
-  const [apiMatches, setApiMatches] = useState<Match[] | null>(null);
+  const { user } = useAuth();
+  const [firebaseGroups, setFirebaseGroups] = useState<Record<string, MovieGroup> | null>(null);
+  const [allMovies, setAllMovies] = useState<Movie[]>([]);
+  const [userPurchases, setUserPurchases] = useState<Record<string, any> | null>(null);
   const [loading, setLoading] = useState(true);
-  const [params] = useSearchParams();
-  const query = (params.get("q") || "").toLowerCase();
-  const [tab, setTab] = useState<"live" | "today" | "tomorrow">("today");
-  const [activeTeamDetails, setActiveTeamDetails] = useState<{ teamId: number, fixtureId: string, leagueId: number, season: number, teamName: string, teamLogo: string } | null>(null);
+  
+  // For guest users, we use the saved phone number
+  const guestPhone = localStorage.getItem("guestPhone");
 
   useEffect(() => {
-    const r = ref(db, "matches");
-    const unsub = onValue(r, (snap) => {
-      setFirebaseMatches(snap.val() as Record<string, Match> | null);
+    // Fetch Groups
+    const groupsRef = ref(db, "movieGroups");
+    const unsubGroups = onValue(groupsRef, (snap) => {
+      setFirebaseGroups(snap.val());
+      setLoading(false);
     });
 
-    async function fetchApiMatches() {
-      setLoading(true);
-      try {
-        const todayStr = new Date().toISOString().split('T')[0];
-        const tomorrowDate = new Date();
-        tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-        const tomorrowStr = tomorrowDate.toISOString().split('T')[0];
-
-        let endpoint = `https://v3.football.api-sports.io/fixtures?date=${todayStr}`;
-        if (tab === "live") endpoint = `https://v3.football.api-sports.io/fixtures?live=all`;
-        if (tab === "tomorrow") endpoint = `https://v3.football.api-sports.io/fixtures?date=${tomorrowStr}`;
-
-        const res = await fetch(endpoint, {
-          headers: { 'x-apisports-key': '5c7ec841c0b922b7deaf823b8880a068' }
-        });
-        const data = await res.json();
-        
-        if (data.errors && Object.keys(data.errors).length > 0) {
-          throw new Error("API Error");
-        }
-        
-        if (data.response && data.response.length > 0) {
-          const topLeagues = [39, 140, 135, 78, 61, 2, 3, 848];
-          let filtered = data.response.filter((m: any) => topLeagues.includes(m.league.id));
-          if (filtered.length === 0) filtered = data.response.slice(0, 15);
-          
-          const formatted: Match[] = filtered.map((m: any) => ({
-            id: String(m.fixture.id),
-            homeTeam: m.teams.home.name,
-            awayTeam: m.teams.away.name,
-            homeLogo: m.teams.home.logo,
-            awayLogo: m.teams.away.logo,
-            time: new Date(m.fixture.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            league: m.league.name,
-            status: m.fixture.status.short === 'NS' ? 'Upcoming' : 
-                    ['1H', '2H', 'HT', 'ET', 'P'].includes(m.fixture.status.short) ? `Live - ${m.fixture.status.elapsed}'` :
-                    ['FT', 'AET', 'PEN'].includes(m.fixture.status.short) ? 'Finished' : m.fixture.status.short,
-            createdAt: m.fixture.timestamp * 1000,
-            homeScore: m.goals?.home ?? null,
-            awayScore: m.goals?.away ?? null,
-            homeTeamId: m.teams.home.id,
-            awayTeamId: m.teams.away.id,
-            leagueId: m.league.id,
-            season: m.league.season
-          }));
-          setApiMatches(formatted);
-        } else {
-          setApiMatches([]);
-        }
-      } catch (e) {
-        console.error(e);
-        setApiMatches(null);
-      } finally {
-        setLoading(false);
+    // Fetch Movies (to count them)
+    const moviesRef = ref(db, "movies");
+    const unsubMovies = onValue(moviesRef, (snap) => {
+      const data = snap.val();
+      if (data) {
+        setAllMovies(Object.entries(data).map(([id, v]: any) => ({ ...v, id })));
+      } else {
+        setAllMovies([]);
       }
+    });
+
+    return () => {
+      unsubGroups();
+      unsubMovies();
+    };
+  }, []);
+
+  useEffect(() => {
+    // Check purchase status using user ID or guest phone
+    let checkUid = user?.uid;
+    if (!checkUid && guestPhone) {
+      let formattedPhone = guestPhone.replace(/\s+/g, "").replace(/^\+/, "");
+      if (formattedPhone.startsWith("0")) formattedPhone = "255" + formattedPhone.slice(1);
+      else if (!formattedPhone.startsWith("255") && formattedPhone.length === 9) formattedPhone = "255" + formattedPhone;
+      if (formattedPhone.length >= 10) checkUid = formattedPhone;
     }
 
-    fetchApiMatches();
-    
-    return unsub;
-  }, [tab]);
+    if (!checkUid) {
+      setUserPurchases(null);
+      return;
+    }
 
-  const matches = useMemo(() => {
-    let baseList: Match[] = [];
-    if (apiMatches && apiMatches.length > 0) {
-      baseList = apiMatches;
-    } else if (firebaseMatches) {
-      baseList = Object.entries(firebaseMatches).map(([id, v]) => ({ ...v, id }));
-      baseList.sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
+    const purchaseRef = ref(db, `purchases/${checkUid}/movieGroups`);
+    const unsubPurchases = onValue(purchaseRef, (snap) => {
+      setUserPurchases(snap.val());
+    });
+
+    return () => unsubPurchases();
+  }, [user, guestPhone]);
+
+  const groups = useMemo(() => {
+    if (firebaseGroups && Object.keys(firebaseGroups).length > 0) {
+      return Object.entries(firebaseGroups).map(([id, v]) => ({ ...v, id }));
     }
-    
-    if (query) {
-      return baseList.filter(
-        (m) => m.homeTeam.toLowerCase().includes(query) || m.awayTeam.toLowerCase().includes(query) || m.league.toLowerCase().includes(query)
-      );
-    }
-    return baseList;
-  }, [apiMatches, firebaseMatches, query]);
+    return DEFAULT_GROUPS;
+  }, [firebaseGroups]);
+
+  const isPurchased = (groupId: string) => {
+    return userPurchases && userPurchases[groupId]?.status === "completed";
+  };
+
+  const getMovieCount = (groupId: string) => {
+    return allMovies.filter(m => m.groupId === groupId).length;
+  };
+
+  if (loading) {
+    return (
+      <Shell>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh" }}>
+          <div style={{ width: 40, height: 40, border: "3px solid rgba(15, 23, 42, 0.1)", borderTopColor: "#3b82f6", borderRadius: "50%", animation: "spin 1s linear infinite" }}></div>
+        </div>
+      </Shell>
+    );
+  }
 
   return (
     <Shell>
-      <div style={{ marginBottom: 24, textAlign: "center" }}>
-        <h1 className="page-title" style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
-          <span className="breathe" style={{ display: "inline-block", color: "var(--accent)" }}>⚽</span> Football Matches
+      <div style={{ marginBottom: 32, textAlign: "center", padding: "0 16px" }}>
+        <h1 className="page-title" style={{ display: "inline-flex", alignItems: "center", gap: 10, flexWrap: "wrap", justifyContent: "center" }}>
+          <span className="breathe" style={{ display: "inline-block", color: "var(--accent)" }}>🎬</span> Premium Movie Groups
         </h1>
-        <p className="muted" style={{ margin: "0 0 16px 0" }}>Top tier football action.</p>
-        <div className="row" style={{ gap: 8, justifyContent: "center" }}>
-          <button className={`btn ${tab === "live" ? "" : "btn-ghost"}`} onClick={() => setTab("live")} style={{ borderRadius: 999, padding: "8px 20px" }}>Live</button>
-          <button className={`btn ${tab === "today" ? "" : "btn-ghost"}`} onClick={() => setTab("today")} style={{ borderRadius: 999, padding: "8px 20px" }}>Today</button>
-          <button className={`btn ${tab === "tomorrow" ? "" : "btn-ghost"}`} onClick={() => setTab("tomorrow")} style={{ borderRadius: 999, padding: "8px 20px" }}>Tomorrow</button>
-        </div>
+        <p className="muted" style={{ margin: "8px 0 16px 0", fontSize: "clamp(14px, 4vw, 16px)" }}>
+          Unlock exclusive movie connections and the latest blockbusters instantly.
+        </p>
       </div>
 
-      {loading ? (
-        <div style={{ textAlign: "center", padding: 40, color: "var(--accent)" }}>Loading live matches...</div>
-      ) : matches.length === 0 ? (
-        <div className="alert" style={{ textAlign: "center" }}>No matches found. Admins will update the daily matches soon!</div>
-      ) : (
-        <div className="grid cols-2" style={{ gap: 20 }}>
-          {matches.map((m) => (
-            <div key={m.id} className="card" style={{ background: "linear-gradient(135deg, #ffffff, #f0fdf4)", border: "1px solid var(--stroke)", transition: "transform 0.3s ease, box-shadow 0.3s ease", cursor: "pointer" }}
-                 onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 30px rgba(16, 185, 129, 0.2)"; e.currentTarget.style.borderColor = "var(--accent)"; }}
-                 onMouseLeave={(e) => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "var(--shadow)"; e.currentTarget.style.borderColor = "var(--stroke)"; }}>
-              <div className="card-body" style={{ display: "flex", flexDirection: "column", alignItems: "center", position: "relative" }}>
+      <div className="grid cols-3 cols-3-mobile" style={{ gap: "clamp(16px, 3vw, 24px)", padding: "0 8px" }}>
+        {groups.map((group) => {
+          const unlocked = isPurchased(group.id!);
+          const movieCount = getMovieCount(group.id!);
+          
+          return (
+            <Link 
+              key={group.id} 
+              to={`/movies/${group.id}`}
+              className="card movie-group-card" 
+              style={{ 
+                background: "linear-gradient(135deg, rgba(11, 18, 36, 0.9), rgba(248, 250, 252, 0.95))", 
+                border: "1px solid var(--stroke)", 
+                transition: "transform 0.3s ease, box-shadow 0.3s ease", 
+                cursor: "pointer",
+                overflow: "hidden",
+                textDecoration: "none",
+                display: "block"
+              }}
+              onMouseEnter={(e) => { 
+                e.currentTarget.style.transform = "translateY(-6px)"; 
+                e.currentTarget.style.boxShadow = unlocked ? "0 12px 30px rgba(16, 185, 129, 0.2)" : "0 12px 30px rgba(14, 165, 233, 0.15)"; 
+                e.currentTarget.style.borderColor = unlocked ? "var(--accent)" : "#0ea5e9"; 
+              }}
+              onMouseLeave={(e) => { 
+                e.currentTarget.style.transform = "none"; 
+                e.currentTarget.style.boxShadow = "var(--shadow)"; 
+                e.currentTarget.style.borderColor = "var(--stroke)"; 
+              }}
+            >
+              <div style={{ position: "relative", width: "100%", paddingTop: "100%" }}>
+                <img 
+                  src={group.thumbnail}
+                  alt={group.name}
+                  style={{ 
+                    position: "absolute", 
+                    top: 0, 
+                    left: 0, 
+                    width: "100%", 
+                    height: "100%", 
+                    objectFit: "cover",
+                    filter: unlocked ? "none" : "blur(4px) brightness(0.6)"
+                  }} 
+                />
                 
-                <div style={{ position: "absolute", top: 12, left: 16, fontSize: 11, fontWeight: 700, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  {m.league}
-                </div>
-                <div style={{ position: "absolute", top: 12, right: 16 }}>
-                  {m.status.includes("Live") ? (
-                    <span className="breathe" style={{ background: "rgba(251, 113, 133, 0.2)", color: "var(--danger)", padding: "4px 8px", borderRadius: 8, fontSize: 11, fontWeight: 800 }}>{m.status}</span>
-                  ) : (
-                    <span style={{ background: "rgba(16, 185, 129, 0.15)", color: "var(--accent)", padding: "4px 8px", borderRadius: 8, fontSize: 11, fontWeight: 700 }}>{m.time}</span>
-                  )}
-                </div>
-
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", marginTop: 32, marginBottom: 16 }}>
-                  {/* Home Team */}
-                  <div 
-                    style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, cursor: m.homeTeamId ? "pointer" : "default", transition: "transform 0.2s" }}
-                    onClick={(e) => {
-                      if (!m.homeTeamId || !m.leagueId || !m.season) return;
-                      e.stopPropagation();
-                      setActiveTeamDetails({ teamId: m.homeTeamId, fixtureId: m.id, leagueId: m.leagueId, season: m.season, teamName: m.homeTeam, teamLogo: m.homeLogo });
-                    }}
-                    onMouseEnter={(e) => { if (m.homeTeamId) e.currentTarget.style.transform = "scale(1.1)"; }}
-                    onMouseLeave={(e) => { if (m.homeTeamId) e.currentTarget.style.transform = "none"; }}
-                  >
-                    <div style={{ width: 64, height: 64, borderRadius: "50%", background: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", padding: 8, boxShadow: "0 8px 24px rgba(14, 165, 233, 0.15)", marginBottom: 12 }}>
-                      <img src={m.homeLogo} alt={m.homeTeam} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-                    </div>
-                    <span style={{ fontWeight: 700, textAlign: "center", fontSize: 14 }}>{m.homeTeam}</span>
-                  </div>
-
-                  {/* VS / Score */}
-                  <div style={{ flex: "0 0 70px", textAlign: "center" }}>
-                    {m.homeScore !== null && m.awayScore !== null ? (
-                      <span style={{ fontWeight: 800, fontSize: 24, color: "var(--accent)", background: "rgba(16,185,129,0.1)", padding: "8px 16px", borderRadius: 12 }}>
-                        {m.homeScore} - {m.awayScore}
-                      </span>
-                    ) : (
-                      <span style={{ fontWeight: 800, fontSize: 20, color: "var(--muted)", background: "rgba(15, 23, 42, 0.05)", padding: "8px 12px", borderRadius: 12 }}>
-                        VS
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Away Team */}
-                  <div 
-                    style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, cursor: m.awayTeamId ? "pointer" : "default", transition: "transform 0.2s" }}
-                    onClick={(e) => {
-                      if (!m.awayTeamId || !m.leagueId || !m.season) return;
-                      e.stopPropagation();
-                      setActiveTeamDetails({ teamId: m.awayTeamId, fixtureId: m.id, leagueId: m.leagueId, season: m.season, teamName: m.awayTeam, teamLogo: m.awayLogo });
-                    }}
-                    onMouseEnter={(e) => { if (m.awayTeamId) e.currentTarget.style.transform = "scale(1.1)"; }}
-                    onMouseLeave={(e) => { if (m.awayTeamId) e.currentTarget.style.transform = "none"; }}
-                  >
-                    <div style={{ width: 64, height: 64, borderRadius: "50%", background: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", padding: 8, boxShadow: "0 8px 24px rgba(14, 165, 233, 0.15)", marginBottom: 12 }}>
-                      <img src={m.awayLogo} alt={m.awayTeam} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-                    </div>
-                    <span style={{ fontWeight: 700, textAlign: "center", fontSize: 14 }}>{m.awayTeam}</span>
-                  </div>
+                {/* Movie Count Badge */}
+                <div style={{
+                  position: "absolute",
+                  top: 12,
+                  left: 12,
+                  background: "rgba(15, 23, 42, 0.8)",
+                  color: "#fff",
+                  padding: "4px 10px",
+                  borderRadius: 20,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  backdropFilter: "blur(4px)",
+                  boxShadow: "0 2px 10px rgba(0,0,0,0.5)",
+                  zIndex: 2
+                }}>
+                  🎞️ {movieCount} {movieCount === 1 ? "Movie" : "Movies"}
                 </div>
 
-                <button className="btn" style={{ width: "100%", padding: "10px", fontWeight: 600 }}>View Odds & Premium Tips</button>
+                {!unlocked && (
+                  <div style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: "rgba(15, 23, 42, 0.4)"
+                  }}>
+                    <span className="breathe" style={{ fontSize: 40, marginBottom: 12 }}>🔒</span>
+                    <span style={{ 
+                      background: "rgba(14, 165, 233, 0.9)", 
+                      color: "#000", 
+                      padding: "6px 12px", 
+                      borderRadius: 20, 
+                      fontSize: 14, 
+                      fontWeight: 800,
+                      boxShadow: "0 0 20px rgba(14, 165, 233, 0.5)"
+                    }}>
+                      {group.amount} {group.currency}
+                    </span>
+                  </div>
+                )}
+                {unlocked && (
+                  <div style={{
+                    position: "absolute",
+                    top: 12,
+                    right: 12,
+                    background: "rgba(16, 185, 129, 0.9)",
+                    color: "#0f172a",
+                    padding: "4px 8px",
+                    borderRadius: 8,
+                    fontSize: 11,
+                    fontWeight: 800,
+                    boxShadow: "0 0 10px rgba(16, 185, 129, 0.5)",
+                    zIndex: 2
+                  }}>
+                    UNLOCKED
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-      
-      {activeTeamDetails && (
-        <TeamDetailsModal 
-          {...activeTeamDetails} 
-          onClose={() => setActiveTeamDetails(null)} 
-        />
-      )}
+              <div className="card-body" style={{ padding: "12px 16px" }}>
+                <h3 style={{ margin: 0, fontSize: "clamp(16px, 4vw, 18px)", fontWeight: 700, color: unlocked ? "var(--accent)" : "#bae6fd" }}>
+                  {group.name}
+                </h3>
+                <p style={{ margin: "6px 0 0 0", fontSize: 13, color: "var(--muted)", lineHeight: 1.4, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                  {group.description}
+                </p>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
     </Shell>
   );
 }

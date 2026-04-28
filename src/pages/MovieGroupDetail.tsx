@@ -48,7 +48,7 @@ export default function MovieGroupDetail() {
 
   const [buyerName, setBuyerName] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
-  const [buyerPhone, setBuyerPhone] = useState("");
+  const [buyerPhone, setBuyerPhone] = useState(() => localStorage.getItem("guestPhone") || "");
   const [payBusy, setPayBusy] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
 
@@ -87,13 +87,28 @@ export default function MovieGroupDetail() {
   }, [groupId]);
 
   useEffect(() => {
-    if (!user || !groupId) return;
-    const purchaseRef = ref(db, `purchases/${user.uid}/movieGroups/${groupId}`);
+    if (!groupId) return;
+    
+    // Determine the UID to check for purchase (either logged in user or formatted guest phone)
+    let checkUid = user?.uid;
+    if (!checkUid && buyerPhone) {
+      let formattedPhone = buyerPhone.replace(/\s+/g, "").replace(/^\+/, "");
+      if (formattedPhone.startsWith("0")) formattedPhone = "255" + formattedPhone.slice(1);
+      else if (!formattedPhone.startsWith("255") && formattedPhone.length === 9) formattedPhone = "255" + formattedPhone;
+      if (formattedPhone.length >= 10) checkUid = formattedPhone;
+    }
+
+    if (!checkUid) {
+      setPurchase(null);
+      return;
+    }
+
+    const purchaseRef = ref(db, `purchases/${checkUid}/movieGroups/${groupId}`);
     const unsubPurchase = onValue(purchaseRef, (snap) => {
       setPurchase(snap.val());
     });
     return () => unsubPurchase();
-  }, [user, groupId]);
+  }, [user, groupId, buyerPhone]);
 
   useEffect(() => {
     if (!user) return;
@@ -110,18 +125,24 @@ export default function MovieGroupDetail() {
   const unlocked = purchase?.status === "completed";
 
   async function startPayment() {
-    if (!groupId || !user) return;
+    if (!groupId || !buyerPhone) return;
     setPayBusy(true);
     setPayError(null);
     try {
-      const idToken = await user.getIdToken();
+      localStorage.setItem("guestPhone", buyerPhone); // Save for later unlocking
+      
+      let idToken = null;
+      if (user) {
+        try { idToken = await user.getIdToken(); } catch(e) {}
+      }
+      
       const res = await fetch(apiUrl("/api/checkout/init"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           idToken,
           movieGroupId: groupId,
-          buyer: { name: buyerName, email: buyerEmail, phone: buyerPhone },
+          buyer: { name: "MOVIES COMPANY", email: "movies@company.com", phone: buyerPhone },
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -152,7 +173,7 @@ export default function MovieGroupDetail() {
   return (
     <Shell>
       <div style={{ marginBottom: 24 }}>
-        <Link to="/movies" className="btn btn-ghost" style={{ marginBottom: 16 }}>← Back to Groups</Link>
+        <Link to="/" className="btn btn-ghost" style={{ marginBottom: 16 }}>← Back to Groups</Link>
         <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
           <div style={{ flex: "1 1 300px" }}>
              <div style={{ position: "relative", width: "100%", paddingTop: "56.25%", borderRadius: 16, overflow: "hidden", border: "1px solid var(--stroke)" }}>
@@ -172,18 +193,15 @@ export default function MovieGroupDetail() {
                   
                   <div className="grid" style={{ gap: 12 }}>
                     <div className="field">
-                      <label>Full Name (two words minimum)</label>
-                      <input className="input" value={buyerName} onChange={e => setBuyerName(e.target.value)} placeholder="e.g. John Doe" />
+                      <label>Phone Number (Enter your payment phone)</label>
+                      <input className="input" value={buyerPhone} onChange={e => setBuyerPhone(e.target.value)} placeholder="e.g. 07XXXXXXXX" />
                     </div>
-                    <div className="field">
-                      <label>Email</label>
-                      <input className="input" type="email" value={buyerEmail} onChange={e => setBuyerEmail(e.target.value)} placeholder="your@email.com" />
-                    </div>
-                    <div className="field">
-                      <label>Phone (e.g. 0712345678)</label>
-                      <input className="input" value={buyerPhone} onChange={e => setBuyerPhone(e.target.value)} placeholder="07XXXXXXXX" />
-                    </div>
-                    <button className="btn" disabled={payBusy} onClick={startPayment} style={{ background: "#0ea5e9", color: "#000", fontWeight: 800 }}>
+                    {!unlocked && buyerPhone && purchase?.status !== "completed" && (
+                      <button className="btn" onClick={() => setPurchase({ status: "checking" } as any)} style={{ background: "transparent", color: "var(--muted)", border: "1px solid var(--stroke)" }}>
+                        Already paid with this phone? Check status
+                      </button>
+                    )}
+                    <button className="btn" disabled={payBusy || !buyerPhone} onClick={startPayment} style={{ background: "#0ea5e9", color: "#000", fontWeight: 800 }}>
                       {payBusy ? "Processing..." : `Unlock for ${group.amount} ${group.currency}`}
                     </button>
                   </div>
