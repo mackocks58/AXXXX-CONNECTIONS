@@ -12,12 +12,12 @@ export async function createPalmpesaOrder({
 }) {
   const url = "https://palmpesa.drmlelwa.co.tz/api/palmpesa/initiate";
 
-  // Phone formatting: ensure it starts with 0 and has no leading 255 or +
+  // Phone formatting: Many TZ APIs prefer 2557XXXXXXXX format
   let phone = buyerPhone.replace(/\s+/g, "").replace(/^\+/, "");
-  if (phone.startsWith("255")) {
-    phone = "0" + phone.substring(3);
-  } else if (!phone.startsWith("0")) {
-    phone = "0" + phone;
+  if (phone.startsWith("0")) {
+    phone = "255" + phone.substring(1);
+  } else if (!phone.startsWith("255") && phone.length === 9) {
+    phone = "255" + phone;
   }
 
   const body = {
@@ -33,6 +33,8 @@ export async function createPalmpesaOrder({
     callback_url: webhookUrl,
   };
 
+  console.log("Initiating PalmPesa Order:", JSON.stringify({ ...body, email: "REDACTED" }));
+
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -45,6 +47,8 @@ export async function createPalmpesaOrder({
 
   let data;
   const text = await response.text();
+  console.log(`PalmPesa Response [${response.status}]:`, text);
+
   try {
     data = JSON.parse(text);
   } catch (e) {

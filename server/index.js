@@ -146,12 +146,10 @@ app.post("/api/checkout/init", async (req, res) => {
     await db.ref(`checkoutSessions/${orderId}`).set(session);
     await db.ref(`userPayments/${uid}/${orderId}`).update(session);
 
-    // ✅ Respond immediately to the client — don't wait for PalmPesa
-    res.json({ orderId, message: "Payment initiated. Check your phone." });
-
-    // 🔄 Call PalmPesa in the background (after response is sent)
+    // 🔄 Call PalmPesa BEFORE responding (Vercel kills background tasks after response)
+    let palmpesaResp;
     try {
-      const palmpesaResp = await createPalmpesaOrder({
+      palmpesaResp = await createPalmpesaOrder({
         apiKey, userId, vendor, orderId,
         buyerEmail: String(buyer.email).trim(),
         buyerName: String(buyer.name).trim(),
@@ -163,24 +161,52 @@ app.post("/api/checkout/init", async (req, res) => {
       console.log("PalmPesa response for", orderId, ":", JSON.stringify(palmpesaResp));
 
       if (!isPalmpesaSuccess(palmpesaResp)) {
-        await db.ref(`checkoutSessions/${orderId}`).update({ status: "palmpesa_error", palmpesa: palmpesaResp });
+        console.error("PalmPesa initiation failed:", palmpesaResp);
+        await db.ref(`checkoutSessions/${orderId}`).update({ 
+          status: "palmpesa_error", 
+          palmpesa: palmpesaResp,
+          updatedAt: Date.now()
+        });
         await db.ref(`userPayments/${uid}/${orderId}`).update({ status: "failed", updatedAt: Date.now() });
-        return;
+        return res.status(400).json({ 
+          error: "Failed to initiate payment with PalmPesa", 
+          details: palmpesaResp?.message || palmpesaResp?.error || "Unknown error"
+        });
       }
 
+      // Success! Update DB and THEN respond
       await db.ref(`checkoutSessions/${orderId}`).update({
         status: "awaiting_payment",
         palmpesaReference: palmpesaResp?.order_id ?? null,
+        updatedAt: Date.now()
       });
 
       if (palmpesaResp?.order_id) {
         await db.ref(`checkoutSessions/${palmpesaResp.order_id}`).set({
-          aliasFor: orderId, uid, betslipId: betslipId || null, movieGroupId: movieGroupId || null, amount: cost, currency
+          aliasFor: orderId, 
+          uid, 
+          betslipId: betslipId || null, 
+          movieGroupId: movieGroupId || null, 
+          amount: cost, 
+          currency,
+          createdAt: Date.now()
         });
       }
+
+      return res.json({ 
+        orderId, 
+        palmpesaOrderId: palmpesaResp?.order_id,
+        message: "Payment initiated. Please check your phone for the USSD prompt." 
+      });
+
     } catch (bgErr) {
-      console.error("Background PalmPesa error for", orderId, ":", bgErr?.message);
-      await db.ref(`checkoutSessions/${orderId}`).update({ status: "palmpesa_error", error: bgErr?.message }).catch(() => {});
+      console.error("PalmPesa error for", orderId, ":", bgErr?.message);
+      await db.ref(`checkoutSessions/${orderId}`).update({ 
+        status: "palmpesa_error", 
+        error: bgErr?.message,
+        updatedAt: Date.now() 
+      }).catch(() => {});
+      return res.status(500).json({ error: "PalmPesa service error: " + bgErr.message });
     }
 
   } catch (e) {
