@@ -122,7 +122,18 @@ export default function MovieGroupDetail() {
     return groupId && FALLBACK_MOVIES[groupId] ? FALLBACK_MOVIES[groupId] : [];
   }, [movies, groupId]);
 
-  const unlocked = purchase?.status === "completed";
+  const { unlocked, daysLeft } = useMemo(() => {
+    if (purchase?.status === "completed") {
+      if (!purchase.paidAt) return { unlocked: true, daysLeft: "Lifetime" };
+      const expiresAt = purchase.paidAt + 5 * 24 * 60 * 60 * 1000;
+      const now = Date.now();
+      if (now < expiresAt) {
+        const daysLeft = Math.ceil((expiresAt - now) / (1000 * 60 * 60 * 24));
+        return { unlocked: true, daysLeft };
+      }
+    }
+    return { unlocked: false, daysLeft: 0 };
+  }, [purchase]);
 
   async function startPayment() {
     if (!groupId || !buyerPhone) return;
@@ -193,11 +204,11 @@ export default function MovieGroupDetail() {
                 borderRadius: 20
               }}>
                 <div className="card-body" style={{ padding: "20px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
+                   <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
                      <span style={{ fontSize: 32, background: "rgba(255,255,255,0.2)", padding: 8, borderRadius: 12 }}>🔓</span>
                      <div>
                        <h2 style={{ margin: 0, fontSize: 24, fontWeight: 900, color: "#fff", letterSpacing: "-0.03em" }}>Unlock Now</h2>
-                       <p style={{ margin: "2px 0 0", fontSize: 13, color: "rgba(255,255,255,0.8)", fontWeight: 600 }}>Lifetime access to this group.</p>
+                       <p style={{ margin: "2px 0 0", fontSize: 13, color: "rgba(255,255,255,0.8)", fontWeight: 600 }}>Access for 5 days.</p>
                      </div>
                   </div>
                   
@@ -255,7 +266,7 @@ export default function MovieGroupDetail() {
             )}
             {unlocked && (
               <div style={{ display: "flex", alignItems: "center", gap: 12, color: "var(--accent)", fontWeight: 700, fontSize: 18 }}>
-                <span style={{ fontSize: 24 }}>✅</span> Group Unlocked - Enjoy the Movies!
+                <span style={{ fontSize: 24 }}>✅</span> Group Unlocked - {daysLeft === "Lifetime" ? "Lifetime Access" : `${daysLeft} Days Left`}
               </div>
             )}
           </div>

@@ -79,8 +79,18 @@ export default function Home() {
     return DEFAULT_GROUPS;
   }, [firebaseGroups]);
 
-  const isPurchased = (groupId: string) => {
-    return userPurchases && userPurchases[groupId]?.status === "completed";
+  const getPurchaseStatus = (groupId: string) => {
+    const purchase = userPurchases?.[groupId];
+    if (purchase?.status === "completed") {
+      if (!purchase.paidAt) return { unlocked: true, daysLeft: "Lifetime" };
+      const expiresAt = purchase.paidAt + 5 * 24 * 60 * 60 * 1000;
+      const now = Date.now();
+      if (now < expiresAt) {
+        const daysLeft = Math.ceil((expiresAt - now) / (1000 * 60 * 60 * 24));
+        return { unlocked: true, daysLeft };
+      }
+    }
+    return { unlocked: false, daysLeft: 0 };
   };
 
   const getMovieCount = (groupId: string) => {
@@ -110,7 +120,7 @@ export default function Home() {
 
       <div className="grid cols-2 cols-2-mobile" style={{ gap: "clamp(12px, 3vw, 24px)", padding: "0 8px" }}>
         {groups.map((group) => {
-          const unlocked = isPurchased(group.id!);
+          const { unlocked, daysLeft } = getPurchaseStatus(group.id!);
           const movieCount = getMovieCount(group.id!);
           
           return (
@@ -233,7 +243,7 @@ export default function Home() {
                     boxShadow: "0 0 10px rgba(16, 185, 129, 0.5)",
                     zIndex: 2
                   }}>
-                    UNLOCKED
+                    UNLOCKED • {daysLeft === "Lifetime" ? "LIFETIME" : `${daysLeft} DAYS LEFT`}
                   </div>
                 )}
               </div>
