@@ -184,27 +184,72 @@ export default function MovieGroupDetail() {
             <h1 style={{ fontSize: "clamp(24px, 6vw, 32px)", margin: 0, color: unlocked ? "var(--accent)" : "#bae6fd", lineHeight: 1.2 }}>{group.name}</h1>
             <p className="muted" style={{ fontSize: "clamp(14px, 4vw, 16px)", margin: "8px 0 20px" }}>{group.description}</p>
             {!unlocked && (
-              <div className="card" style={{ border: "1px solid #0ea5e9", background: "rgba(14, 165, 233, 0.05)" }}>
-                <div className="card-body" style={{ padding: "clamp(12px, 4vw, 20px)" }}>
-                  <h2 style={{ margin: 0, fontSize: "clamp(18px, 4vw, 20px)", color: "#bae6fd" }}>Unlock this Group</h2>
-                  <p className="muted" style={{ margin: "4px 0 16px", fontSize: 13 }}>Pay once to get lifetime access to all movies in this group.</p>
-                  
-                  {payError && <div className="alert" style={{ marginBottom: 12 }}>{payError}</div>}
-                  
-                  <div className="grid" style={{ gap: 12 }}>
-                    <div className="field">
-                      <label>Phone Number (Enter your payment phone)</label>
-                      <input className="input" value={buyerPhone} onChange={e => setBuyerPhone(e.target.value)} placeholder="e.g. 07XXXXXXXX" />
-                    </div>
-                    {!unlocked && buyerPhone && purchase?.status !== "completed" && (
-                      <button className="btn" onClick={() => setPurchase({ status: "checking" } as any)} style={{ background: "transparent", color: "var(--muted)", border: "1px solid var(--stroke)" }}>
-                        Already paid with this phone? Check status
-                      </button>
-                    )}
-                    <button className="btn" disabled={payBusy || !buyerPhone} onClick={startPayment} style={{ background: "#0ea5e9", color: "#000", fontWeight: 800 }}>
-                      {payBusy ? "Processing..." : `Unlock for ${group.amount} ${group.currency}`}
-                    </button>
+              <div className="card" style={{ 
+                maxWidth: 360,
+                border: "none", 
+                background: "linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)",
+                boxShadow: "0 12px 40px rgba(14, 165, 233, 0.35)",
+                color: "#fff",
+                borderRadius: 20
+              }}>
+                <div className="card-body" style={{ padding: "20px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
+                     <span style={{ fontSize: 32, background: "rgba(255,255,255,0.2)", padding: 8, borderRadius: 12 }}>🔓</span>
+                     <div>
+                       <h2 style={{ margin: 0, fontSize: 24, fontWeight: 900, color: "#fff", letterSpacing: "-0.03em" }}>Unlock Now</h2>
+                       <p style={{ margin: "2px 0 0", fontSize: 13, color: "rgba(255,255,255,0.8)", fontWeight: 600 }}>Lifetime access to this group.</p>
+                     </div>
                   </div>
+                  
+                  {payError && <div style={{ background: "rgba(239, 68, 68, 0.9)", color: "#fff", padding: "10px 12px", borderRadius: 10, fontSize: 13, marginBottom: 16, fontWeight: 700 }}>{payError}</div>}
+                  
+                  <div style={{ background: "rgba(0,0,0,0.15)", padding: 16, borderRadius: 16, marginBottom: 16 }}>
+                    <label style={{ display: "block", fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,0.9)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Payment Phone</label>
+                    <input 
+                      value={buyerPhone} 
+                      onChange={e => setBuyerPhone(e.target.value)} 
+                      placeholder="e.g. 07XXXXXXXX"
+                      style={{
+                        width: "100%", padding: "14px 16px", borderRadius: 10, border: "2px solid rgba(255,255,255,0.3)",
+                        background: "rgba(255,255,255,0.95)", color: "#000", fontSize: 18, fontWeight: 900,
+                        outline: "none", transition: "border 0.2s"
+                      }}
+                      onFocus={e => e.target.style.borderColor = "#10b981"}
+                      onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.3)"}
+                    />
+                  </div>
+                  
+                  <button 
+                    disabled={payBusy || !buyerPhone} 
+                    onClick={startPayment} 
+                    style={{ 
+                      width: "100%", padding: "16px", borderRadius: 12, border: "none",
+                      background: "linear-gradient(90deg, #10b981, #059669)", color: "#fff", 
+                      fontSize: 18, fontWeight: 900, cursor: (payBusy || !buyerPhone) ? "not-allowed" : "pointer",
+                      boxShadow: "0 6px 20px rgba(16, 185, 129, 0.4)", opacity: (payBusy || !buyerPhone) ? 0.7 : 1,
+                      transition: "transform 0.1s"
+                    }}
+                    onMouseDown={e => e.currentTarget.style.transform = "scale(0.97)"}
+                    onMouseUp={e => e.currentTarget.style.transform = "scale(1)"}
+                  >
+                    {payBusy ? "PROCESSING..." : `PAY ${group.amount} ${group.currency}`}
+                  </button>
+
+                  {!unlocked && buyerPhone && purchase?.status !== "completed" && (
+                    <button 
+                      onClick={() => setPurchase({ status: "checking" } as any)} 
+                      style={{ 
+                        width: "100%", marginTop: 14, padding: "10px", background: "rgba(255,255,255,0.1)", 
+                        border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.95)", 
+                        fontSize: 13, fontWeight: 800, borderRadius: 10, cursor: "pointer",
+                        transition: "background 0.2s"
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.2)"}
+                      onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+                    >
+                      Already paid? Check status
+                    </button>
+                  )}
                 </div>
               </div>
             )}
