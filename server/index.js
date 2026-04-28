@@ -523,6 +523,33 @@ app.post("/api/debug/palmpesa-probe", async (req, res) => {
   }
 });
 
+// ─── DEBUG: Inspect Firebase Configuration ─────────────────────────────────────
+app.get("/api/debug/firebase-config", (req, res) => {
+  try {
+    const jsonRaw = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+    if (!jsonRaw) return res.json({ error: "FIREBASE_SERVICE_ACCOUNT_JSON is empty on Vercel." });
+
+    const certObj = JSON.parse(jsonRaw);
+    const originalKey = certObj.private_key || "";
+    const fixedKey = originalKey.replace(/\\n/g, '\n');
+
+    return res.json({
+      databaseURL: process.env.FIREBASE_DATABASE_URL || process.env.VITE_FIREBASE_DATABASE_URL || "MISSING",
+      project_id: certObj.project_id,
+      client_email: certObj.client_email,
+      has_private_key: !!certObj.private_key,
+      key_length: originalKey.length,
+      original_newlines: (originalKey.match(/\n/g) || []).length,
+      literal_backslash_n: (originalKey.match(/\\n/g) || []).length,
+      fixed_newlines: (fixedKey.match(/\n/g) || []).length,
+      starts_with_begin: fixedKey.startsWith("-----BEGIN PRIVATE KEY-----"),
+      ends_with_end: fixedKey.trim().endsWith("-----END PRIVATE KEY-----")
+    });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
 if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`Betslips API listening on http://127.0.0.1:${PORT}`);
