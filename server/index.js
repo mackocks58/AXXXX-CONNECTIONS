@@ -437,6 +437,69 @@ app.all("/api/palmpesa/webhook", async (req, res) => {
   }
 });
 
+// ─── DEBUG: Inspect a checkout session (remove in production) ─────────────────
+app.get("/api/debug/checkout/:orderId", async (req, res) => {
+  try {
+    const admin = getAdmin();
+    const db = admin.database();
+    const snap = await db.ref(`checkoutSessions/${req.params.orderId}`).get();
+    if (!snap.exists()) return res.status(404).json({ error: "Session not found" });
+    return res.json(snap.val());
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+// ─── DEBUG: Last 20 webhook logs ──────────────────────────────────────────────
+app.get("/api/debug/webhooks", async (req, res) => {
+  try {
+    const admin = getAdmin();
+    const db = admin.database();
+    const snap = await db.ref("webhookLogs").orderByKey().limitToLast(20).get();
+    return res.json(snap.exists() ? snap.val() : {});
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+// ─── DEBUG: palmpesa direct probe (POST body forwarded) ───────────────────────
+app.post("/api/debug/palmpesa-probe", async (req, res) => {
+  try {
+    const { phone, amount } = req.body || {};
+    if (!phone || !amount) return res.status(400).json({ error: "phone and amount required" });
+
+    const apiKey  = process.env.PALMPESA_API_KEY;
+    const userId  = process.env.PALMPESA_USER_ID;
+    const vendor  = process.env.PALMPESA_VENDOR;
+    if (!apiKey || !userId) return res.status(500).json({ error: "PalmPesa not configured" });
+
+    const { createPalmpesaOrder, checkPalmpesaStatus } = await import("./palmpesa.js");
+    const orderId = `PROBE${Date.now()}`;
+    const webhookBase = process.env.SELCOM_WEBHOOK_PUBLIC_URL || process.env.VITE_API_BASE_URL || "https://xxxx-connections.vercel.app";
+    const webhookUrl  = `${webhookBase.replace(/\/$/, "")}/api/palmpesa/webhook`;
+
+    const palmpesaResp = await createPalmpesaOrder({
+      apiKey, userId, vendor, orderId,
+      buyerEmail: "probe@debug.com",
+      buyerName:  "Probe Test",
+      buyerPhone: String(phone).trim(),
+      amount,
+      webhookUrl,
+    });
+
+    // Poll status after 3s
+    let statusResp = null;
+    if (palmpesaResp?.order_id) {
+      await new Promise(r => setTimeout(r, 3000));
+      statusResp = await checkPalmpesaStatus({ apiKey, orderId: palmpesaResp.order_id });
+    }
+
+    return res.json({ orderId, palmpesaResp, statusResp });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
 if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`Betslips API listening on http://127.0.0.1:${PORT}`);
@@ -444,3 +507,4 @@ if (!process.env.VERCEL) {
 }
 
 export default app;
+
