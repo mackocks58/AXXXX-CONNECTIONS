@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { onValue, push, ref, remove, set } from "firebase/database";
-import { db } from "@/firebase";
+import { ref as sRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db, storage } from "@/firebase";
 import type { Movie, MovieGroup } from "@/types";
 
 export function AdminMovies() {
@@ -14,7 +15,7 @@ export function AdminMovies() {
   
   const [mTitle, setMTitle] = useState("");
   const [mYoutube, setMYoutube] = useState("");
-  const [mLocalFile, setMLocalFile] = useState("");
+  const [mVideoFile, setMVideoFile] = useState<File | null>(null);
   const [mGroup, setMGroup] = useState("");
   
   const [busy, setBusy] = useState(false);
@@ -62,21 +63,29 @@ export function AdminMovies() {
   async function addMovie(e: React.FormEvent) {
     e.preventDefault();
     if (!mGroup) { setErr("Select a group first."); return; }
-    if (!mYoutube && !mLocalFile) { setErr("Provide a YouTube ID or a local filename."); return; }
+    if (!mYoutube && !mVideoFile) { setErr("Provide a YouTube ID or upload a video file."); return; }
 
     setBusy(true); setErr(null); setMsg(null);
 
     try {
+      let videoUrl = null;
+      if (mVideoFile) {
+        setMsg("Uploading video...");
+        const storageRef = sRef(storage, `movies/${mGroup}/${Date.now()}_${mVideoFile.name}`);
+        const snapshot = await uploadBytes(storageRef, mVideoFile);
+        videoUrl = await getDownloadURL(snapshot.ref);
+      }
+
       const key = push(ref(db, "movies")).key;
       await set(ref(db, `movies/${key}`), {
         title: mTitle,
         youtubeId: mYoutube || null,
-        localFilename: mLocalFile || null,
+        videoUrl: videoUrl,
         groupId: mGroup,
         createdAt: Date.now()
       });
       setMsg("Movie added successfully.");
-      setMTitle(""); setMYoutube(""); setMLocalFile("");
+      setMTitle(""); setMYoutube(""); setMVideoFile(null);
     } catch (e: any) { setErr(e.message); }
     finally { setBusy(false); }
   }
@@ -145,9 +154,9 @@ export function AdminMovies() {
               </div>
               <div style={{ textAlign: "center", color: "var(--muted)", fontSize: 12 }}>- OR -</div>
               <div className="field">
-                <label>Source: Local Filename</label>
-                <input className="input" value={mLocalFile} onChange={e => setMLocalFile(e.target.value)} placeholder="e.g. movie1.mp4" />
-                <p className="muted" style={{ fontSize: 11, marginTop: 4 }}>Place the actual file at <code>public/videos/GROUP_ID/filename.mp4</code></p>
+                <label>Source: Video File (Firebase Storage)</label>
+                <input type="file" accept="video/*" onChange={e => setMVideoFile(e.target.files?.[0] || null)} />
+                <p className="muted" style={{ fontSize: 11, marginTop: 4 }}>Video will be uploaded securely to Firebase Storage.</p>
               </div>
               <button className="btn" type="submit" disabled={busy}>
                 {busy ? "Processing..." : "Add Movie"}
@@ -185,7 +194,7 @@ export function AdminMovies() {
                  {movieList.map(m => (
                    <tr key={m.id}>
                      <td style={{ paddingLeft: 32 }}>🎬 {m.title}</td>
-                     <td style={{ fontSize: 11 }}>{m.youtubeId ? "YouTube" : m.localFilename ? `Local (${m.localFilename})` : "Uploaded File"}</td>
+                     <td style={{ fontSize: 11 }}>{m.youtubeId ? "YouTube" : m.videoUrl ? "Firebase Storage" : "Unknown"}</td>
                      <td><button className="btn btn-danger btn-sm" onClick={() => deleteMovie(m.id)}>Delete</button></td>
                    </tr>
                  ))}
