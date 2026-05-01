@@ -72,7 +72,8 @@ export function AdminMovies() {
       if (mVideoFile) {
         setMsg("Uploading video...");
         const storageRef = sRef(storage, `movies/${mGroup}/${Date.now()}_${mVideoFile.name}`);
-        const snapshot = await uploadBytes(storageRef, mVideoFile);
+        const metadata = { contentType: mVideoFile.type || 'video/mp4' };
+        const snapshot = await uploadBytes(storageRef, mVideoFile, metadata);
         videoUrl = await getDownloadURL(snapshot.ref);
       }
 

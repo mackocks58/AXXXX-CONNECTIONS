@@ -11,21 +11,29 @@ const serviceAccount = JSON.parse(readFileSync(serviceAccountPath, 'utf8'));
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: 'classic-videos.firebasestorage.app'
+  storageBucket: 'xxxx-connection.firebasestorage.app'
 });
 
-async function listBuckets() {
+const bucket = admin.storage().bucket();
+
+const corsConfiguration = [
+  {
+    origin: ['*'],
+    method: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    maxAgeSeconds: 3600,
+    responseHeader: ['*']
+  }
+];
+
+async function setCors() {
   try {
-    const [buckets] = await admin.storage().getBuckets();
-    console.log('Buckets:');
-    buckets.forEach(bucket => {
-      console.log(bucket.name);
-    });
+    await bucket.setCorsConfiguration(corsConfiguration);
+    console.log('CORS configuration successfully set on xxxx-connection.firebasestorage.app!');
     process.exit(0);
   } catch (error) {
-    console.error('Error listing buckets:', error);
+    console.error('Error setting CORS configuration:', error);
     process.exit(1);
   }
 }
 
-listBuckets();
+setCors();
