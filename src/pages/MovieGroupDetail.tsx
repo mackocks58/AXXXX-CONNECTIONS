@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { onValue, ref } from "firebase/database";
 import { db } from "@/firebase";
@@ -32,6 +32,25 @@ export default function MovieGroupDetail() {
   const [buyerPhone, setBuyerPhone] = useState(() => localStorage.getItem("guestPhone") || "");
   const [payBusy, setPayBusy] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
+  const [country, setCountry] = useState<string | null>(null);
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  const handleFullscreen = () => {
+    const el = videoRef.current || iframeRef.current;
+    if (!el) return;
+    
+    if (el.requestFullscreen) {
+      el.requestFullscreen();
+    } else if ((el as any).webkitEnterFullscreen) {
+      (el as any).webkitEnterFullscreen(); // iOS Safari
+    } else if ((el as any).mozRequestFullScreen) {
+      (el as any).mozRequestFullScreen();
+    } else if ((el as any).msRequestFullscreen) {
+      (el as any).msRequestFullscreen();
+    }
+  };
 
   useEffect(() => {
     if (!groupId) return;
@@ -97,6 +116,17 @@ export default function MovieGroupDetail() {
     if (dn && dn.split(/\s+/).length >= 2) setBuyerName(dn);
     if (user.email) setBuyerEmail(user.email);
   }, [user]);
+
+  useEffect(() => {
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.country) {
+          setCountry(data.country);
+        }
+      })
+      .catch(err => console.error("Country detection failed", err));
+  }, []);
 
   const finalMovies = useMemo(() => {
     return movies || [];
@@ -194,37 +224,67 @@ export default function MovieGroupDetail() {
                   
                   {payError && <div style={{ background: "rgba(239, 68, 68, 0.9)", color: "#fff", padding: "10px 12px", borderRadius: 10, fontSize: 13, marginBottom: 16, fontWeight: 700 }}>{payError}</div>}
                   
-                  <div style={{ background: "rgba(0,0,0,0.15)", padding: 16, borderRadius: 16, marginBottom: 16 }}>
-                    <label style={{ display: "block", fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,0.9)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Payment Phone</label>
-                    <input 
-                      value={buyerPhone} 
-                      onChange={e => setBuyerPhone(e.target.value)} 
-                      placeholder="e.g. 07XXXXXXXX"
-                      style={{
-                        width: "100%", padding: "14px 16px", borderRadius: 10, border: "2px solid rgba(255,255,255,0.3)",
-                        background: "rgba(255,255,255,0.95)", color: "#000", fontSize: 18, fontWeight: 900,
-                        outline: "none", transition: "border 0.2s"
-                      }}
-                      onFocus={e => e.target.style.borderColor = "#10b981"}
-                      onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.3)"}
-                    />
-                  </div>
-                  
-                  <button 
-                    disabled={payBusy || !buyerPhone} 
-                    onClick={startPayment} 
-                    style={{ 
-                      width: "100%", padding: "16px", borderRadius: 12, border: "none",
-                      background: "linear-gradient(90deg, #10b981, #059669)", color: "#fff", 
-                      fontSize: 18, fontWeight: 900, cursor: (payBusy || !buyerPhone) ? "not-allowed" : "pointer",
-                      boxShadow: "0 6px 20px rgba(16, 185, 129, 0.4)", opacity: (payBusy || !buyerPhone) ? 0.7 : 1,
-                      transition: "transform 0.1s"
-                    }}
-                    onMouseDown={e => e.currentTarget.style.transform = "scale(0.97)"}
-                    onMouseUp={e => e.currentTarget.style.transform = "scale(1)"}
-                  >
-                    {payBusy ? "PROCESSING..." : `PAY ${group.amount} ${group.currency}`}
-                  </button>
+                  {country === 'ZM' ? (
+                    <div style={{ background: "rgba(0,0,0,0.15)", padding: 16, borderRadius: 16, marginBottom: 16 }}>
+                      <label style={{ display: "block", fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,0.9)", marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.05em" }}>Manual Payment (Zambia)</label>
+                      <p style={{ margin: "0 0 8px 0", fontSize: 14, color: "#fff", fontWeight: 600 }}>Please pay the equivalent of {group.amount} {group.currency} to:</p>
+                      <ul style={{ margin: "0 0 12px 0", paddingLeft: 20, fontSize: 14, fontWeight: 700, color: "#fff" }}>
+                        <li>MTN: +260965386345</li>
+                        <li>Airtel: +260978386345</li>
+                        <li>Zamtel: +260953386345</li>
+                      </ul>
+                      <p style={{ margin: "0 0 12px 0", fontSize: 13, color: "rgba(255,255,255,0.8)", fontWeight: 500 }}>
+                        After sending the payment, contact the Admin on WhatsApp with your proof of payment to unlock access.
+                      </p>
+                      
+                      <a 
+                        href="https://wa.me/260965386345" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        style={{
+                          display: "block", width: "100%", padding: "14px", borderRadius: 12, background: "#25D366", 
+                          color: "#fff", textAlign: "center", textDecoration: "none", fontSize: 16, fontWeight: 900,
+                          boxShadow: "0 4px 15px rgba(37, 211, 102, 0.4)", transition: "transform 0.1s"
+                        }}
+                      >
+                        Contact Admin on WhatsApp
+                      </a>
+                    </div>
+                  ) : (
+                    <>
+                      <div style={{ background: "rgba(0,0,0,0.15)", padding: 16, borderRadius: 16, marginBottom: 16 }}>
+                        <label style={{ display: "block", fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,0.9)", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Payment Phone</label>
+                        <input 
+                          value={buyerPhone} 
+                          onChange={e => setBuyerPhone(e.target.value)} 
+                          placeholder="e.g. 07XXXXXXXX"
+                          style={{
+                            width: "100%", padding: "14px 16px", borderRadius: 10, border: "2px solid rgba(255,255,255,0.3)",
+                            background: "rgba(255,255,255,0.95)", color: "#000", fontSize: 18, fontWeight: 900,
+                            outline: "none", transition: "border 0.2s"
+                          }}
+                          onFocus={e => e.target.style.borderColor = "#10b981"}
+                          onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.3)"}
+                        />
+                      </div>
+                      
+                      <button 
+                        disabled={payBusy || !buyerPhone} 
+                        onClick={startPayment} 
+                        style={{ 
+                          width: "100%", padding: "16px", borderRadius: 12, border: "none",
+                          background: "linear-gradient(90deg, #10b981, #059669)", color: "#fff", 
+                          fontSize: 18, fontWeight: 900, cursor: (payBusy || !buyerPhone) ? "not-allowed" : "pointer",
+                          boxShadow: "0 6px 20px rgba(16, 185, 129, 0.4)", opacity: (payBusy || !buyerPhone) ? 0.7 : 1,
+                          transition: "transform 0.1s"
+                        }}
+                        onMouseDown={e => e.currentTarget.style.transform = "scale(0.97)"}
+                        onMouseUp={e => e.currentTarget.style.transform = "scale(1)"}
+                      >
+                        {payBusy ? "PROCESSING..." : `PAY ${group.amount} ${group.currency}`}
+                      </button>
+                    </>
+                  )}
 
                   {!unlocked && buyerPhone && purchase?.status !== "completed" && (
                     <button 
@@ -301,6 +361,7 @@ export default function MovieGroupDetail() {
             <div style={{ position: "relative", paddingTop: "56.25%", background: "#000", borderRadius: 16, overflow: "hidden", border: "1px solid var(--stroke)" }}>
               {activeMovie.videoUrl ? (
                 <video 
+                  ref={videoRef}
                   src={activeMovie.videoUrl} 
                   controls 
                   autoPlay 
@@ -309,6 +370,7 @@ export default function MovieGroupDetail() {
                 />
               ) : (
                 <iframe 
+                  ref={iframeRef}
                   src={`https://www.youtube.com/embed/${activeMovie.youtubeId}?autoplay=1`}
                   style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
                   frameBorder="0"
@@ -316,7 +378,15 @@ export default function MovieGroupDetail() {
                 />
               )}
             </div>
-            <h2 style={{ marginTop: 16, color: "#0f172a" }}>{activeMovie.title}</h2>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 16 }}>
+              <h2 style={{ margin: 0, color: "#fff" }}>{activeMovie.title}</h2>
+              <button 
+                onClick={handleFullscreen}
+                style={{ background: "var(--accent)", border: "none", color: "#fff", padding: "10px 20px", borderRadius: 8, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 12px rgba(14, 165, 233, 0.3)" }}
+              >
+                ⛶ FULLSCREEN
+              </button>
+            </div>
           </div>
         </div>
       )}
