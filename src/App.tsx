@@ -11,7 +11,6 @@ import PaymentHistory from "@/pages/PaymentHistory";
 import Support from "@/pages/Support";
 import PaymentReturn from "@/pages/PaymentReturn";
 import PaymentCancel from "@/pages/PaymentCancel";
-import Account from "@/pages/Account";
 import Notifications from "@/pages/Notifications";
 import Movies from "@/pages/Movies";
 import Affiliate from "@/pages/Affiliate";
@@ -47,7 +46,6 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/payments" element={<PaymentHistory />} />
         <Route path="/support" element={<Support />} />
-        <Route path="/account" element={<Account />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/payment/return" element={<PaymentReturn />} />
         <Route path="/payment/cancel" element={<PaymentCancel />} />
