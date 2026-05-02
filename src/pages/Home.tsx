@@ -176,8 +176,7 @@ export default function Home() {
                     left: 0, 
                     width: "100%", 
                     height: "100%", 
-                    objectFit: "cover",
-                    filter: unlocked ? "none" : "blur(4px) brightness(0.6)"
+                    objectFit: "cover"
                   }} 
                 />
                 
@@ -211,8 +210,7 @@ export default function Home() {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    justifyContent: "center",
-                    background: "rgba(15, 23, 42, 0.4)"
+                    justifyContent: "center"
                   }}>
                     <span className="breathe" style={{ fontSize: 40, marginBottom: 12 }}>🔒</span>
                     <span style={{ 
