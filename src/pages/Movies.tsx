@@ -20,7 +20,7 @@ export default function Movies() {
   const [allMovies, setAllMovies] = useState<Movie[]>([]);
   const [userPurchases, setUserPurchases] = useState<Record<string, any> | null>(null);
   const [loading, setLoading] = useState(true);
-  
+
   // For guest users, we use the saved phone number
   const guestPhone = localStorage.getItem("guestPhone");
 
@@ -111,10 +111,10 @@ export default function Movies() {
     <Shell>
       <div style={{ marginBottom: 32, textAlign: "center", padding: "0 16px" }}>
         <h1 className="page-title" style={{ display: "inline-flex", alignItems: "center", gap: 10, flexWrap: "wrap", justifyContent: "center" }}>
-          <span className="breathe" style={{ display: "inline-block", color: "var(--accent)" }}>🎭</span> Premium Movie Groups
+          <span className="breathe" style={{ display: "inline-block", color: "var(--accent)" }}>🎭</span> ALL CONNECTIONS
         </h1>
         <p className="muted" style={{ margin: "8px 0 16px 0", fontSize: "clamp(14px, 4vw, 16px)" }}>
-          Unlock exclusive movie connections and the latest blockbusters instantly.
+          Tunakuwekea connections zote hapa kwa bei poa kabisa.
         </p>
       </div>
 
@@ -122,30 +122,30 @@ export default function Movies() {
         {groups.map((group) => {
           const { unlocked, daysLeft } = getPurchaseStatus(group.id!);
           const movieCount = getMovieCount(group.id!);
-          
+
           return (
-            <Link 
-              key={group.id} 
+            <Link
+              key={group.id}
               to={`/movies/${group.id}`}
-              className="card movie-group-card" 
-              style={{ 
-                background: "linear-gradient(135deg, rgba(11, 18, 36, 0.9), rgba(248, 250, 252, 0.95))", 
-                border: "1px solid var(--stroke)", 
-                transition: "transform 0.3s ease, box-shadow 0.3s ease", 
+              className="card movie-group-card"
+              style={{
+                background: "linear-gradient(135deg, rgba(11, 18, 36, 0.9), rgba(248, 250, 252, 0.95))",
+                border: "1px solid var(--stroke)",
+                transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 cursor: "pointer",
                 overflow: "hidden",
                 textDecoration: "none",
                 display: "block"
               }}
-              onMouseEnter={(e) => { 
-                e.currentTarget.style.transform = "translateY(-6px)"; 
-                e.currentTarget.style.boxShadow = unlocked ? "0 12px 30px rgba(16, 185, 129, 0.2)" : "0 12px 30px rgba(14, 165, 233, 0.15)"; 
-                e.currentTarget.style.borderColor = unlocked ? "var(--accent)" : "#0ea5e9"; 
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-6px)";
+                e.currentTarget.style.boxShadow = unlocked ? "0 12px 30px rgba(16, 185, 129, 0.2)" : "0 12px 30px rgba(14, 165, 233, 0.15)";
+                e.currentTarget.style.borderColor = unlocked ? "var(--accent)" : "#0ea5e9";
               }}
-              onMouseLeave={(e) => { 
-                e.currentTarget.style.transform = "none"; 
-                e.currentTarget.style.boxShadow = "var(--shadow)"; 
-                e.currentTarget.style.borderColor = "var(--stroke)"; 
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "none";
+                e.currentTarget.style.boxShadow = "var(--shadow)";
+                e.currentTarget.style.borderColor = "var(--stroke)";
               }}
             >
               {/* Colorful Group Title Banner */}
@@ -167,19 +167,19 @@ export default function Movies() {
               </div>
 
               <div style={{ position: "relative", width: "100%", paddingTop: "85%" }}>
-                <img 
+                <img
                   src={group.thumbnail}
                   alt={group.name}
-                  style={{ 
-                    position: "absolute", 
-                    top: 0, 
-                    left: 0, 
-                    width: "100%", 
-                    height: "100%", 
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
                     objectFit: "cover"
-                  }} 
+                  }}
                 />
-                
+
                 {/* Movie Count Badge */}
                 <div style={{
                   position: "absolute",
@@ -197,7 +197,7 @@ export default function Movies() {
                   boxShadow: "0 4px 15px rgba(239, 68, 68, 0.4)",
                   zIndex: 2
                 }}>
-                  🎞️ {movieCount} {movieCount === 1 ? "Movie" : "Movies"}
+                  🎞️ {movieCount} {movieCount === 1 ? "Video" : "Videos"}
                 </div>
 
                 {!unlocked && (
@@ -213,12 +213,12 @@ export default function Movies() {
                     justifyContent: "center"
                   }}>
                     <span className="breathe" style={{ fontSize: 40, marginBottom: 12 }}>🔒</span>
-                    <span style={{ 
-                      background: "rgba(14, 165, 233, 0.9)", 
-                      color: "#000", 
-                      padding: "6px 12px", 
-                      borderRadius: 20, 
-                      fontSize: 14, 
+                    <span style={{
+                      background: "rgba(14, 165, 233, 0.9)",
+                      color: "#000",
+                      padding: "6px 12px",
+                      borderRadius: 20,
+                      fontSize: 14,
                       fontWeight: 800,
                       boxShadow: "0 0 20px rgba(14, 165, 233, 0.5)"
                     }}>

@@ -197,7 +197,7 @@ export default function Home() {
                   boxShadow: "0 4px 15px rgba(239, 68, 68, 0.4)",
                   zIndex: 2
                 }}>
-                  🎞️ {movieCount} {movieCount === 1 ? "Movie" : "Movies"}
+                  🎞️ {movieCount} {movieCount === 1 ? "Video" : "Videos"}
                 </div>
 
                 {!unlocked && (
